@@ -26,9 +26,9 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   );
 
   useEffect(() => {
-    // setTimeout(() => {
-    //   setIsAuthenticated(false);
-    // }, 2000);
+    setTimeout(() => {
+      setIsAuthenticated(false);
+    }, 2000);
   }, []);
 
   const login = async () => {

@@ -1,9 +1,9 @@
 import { Slot, Stack, router, useSegments } from "expo-router";
 
-import "../global.css";
 import { AuthContextProvider, useAuth } from "@/context/authContext";
 import { useEffect } from "react";
 
+import "../global.css";
 const MainLayout = () => {
   const { isAuthenticated } = useAuth();
   const segments = useSegments();
@@ -16,7 +16,7 @@ const MainLayout = () => {
     } else if (!isAuthenticated) {
       router.replace("signIn");
     }
-  }, [isAuthenticated, segments]);
+  }, [isAuthenticated]);
 
   return <Slot />;
 };
