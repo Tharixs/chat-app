@@ -1,13 +1,15 @@
 import Loading from "@/components/Loading";
-import { Octicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import TextInput from "@/components/TextInput";
+import { signInSchema } from "@/schemas/auth/signIn.schema";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
+  Alert,
   Image,
   Pressable,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -15,11 +17,22 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { AvoidingKeyboard } from "@/components/AvoidingKeyboard";
 
 export default function SignIn() {
   const [loading, setLoading] = useState(false);
+  const { control, formState, handleSubmit, getValues } = useForm({
+    resolver: yupResolver(signInSchema),
+    delayError: 300,
+  });
+  const onSubmit: SubmitHandler<SignIn> = async (data) => {
+    console.log(data.email, data.password);
+  };
+
   return (
-    <View className="flex-1">
+    <AvoidingKeyboard>
       <StatusBar style="dark" />
       <View
         style={{ paddingTop: hp(8), paddingHorizontal: wp(5) }}
@@ -42,39 +55,45 @@ export default function SignIn() {
         </View>
         {/* Text Input */}
         <View className="gap-4">
-          <View
-            style={{ height: hp(7) }}
-            className="flex-row gap-4 px-4 bg-neutral-100 items-center rounded-xl"
-          >
-            <Octicons name="mail" size={24} color="gray" />
+          <TextInput
+            icon={
+              <Ionicons
+                name="mail-outline"
+                size={hp(3.5)}
+                color={"rgb(115 115 115)"}
+                style={{ marginRight: wp(2) }}
+              />
+            }
+            control={control}
+            name="email"
+            placeholder="Email Address"
+            errorMessage={String(formState.errors.email?.message ?? "")}
+          />
+          <View className="gap-3">
             <TextInput
-              style={{ fontSize: hp(2) }}
-              className="flex-1 font-semibold text-neutral-700"
-              placeholder="Email Address"
-              placeholderTextColor={"gray"}
+              icon={
+                <Ionicons
+                  name="lock-closed-outline"
+                  size={hp(3.5)}
+                  color={"rgb(115 115 115)"}
+                  style={{ marginRight: wp(2) }}
+                />
+              }
+              control={control}
+              name="password"
+              placeholder="Password"
+              scureTextEntry={true}
+              errorMessage={String(formState.errors.password?.message ?? "")}
             />
           </View>
-          <View className="gap-3">
-            <View
-              style={{ height: hp(7) }}
-              className="flex-row gap-4 px-4 bg-neutral-100 items-center rounded-xl"
-            >
-              <Octicons name="lock" size={24} color="gray" />
-              <TextInput
-                style={{ fontSize: hp(2) }}
-                className="flex-1 font-semibold text-neutral-700"
-                placeholder="Password"
-                placeholderTextColor={"gray"}
-                secureTextEntry
-              />
-            </View>
-            <Text
-              style={{ fontSize: hp(1.8) }}
-              className="font-semibold text-right text-neutral-500"
-            >
-              Forgot Password?
-            </Text>
-          </View>
+          <Text
+            style={{ fontSize: hp(1.8) }}
+            className="font-semibold text-right text-neutral-500"
+          >
+            Forgot Password?
+          </Text>
+        </View>
+        <View className="gap-4">
           <View>
             {loading ? (
               <View className="justify-center items-center">
@@ -82,8 +101,12 @@ export default function SignIn() {
               </View>
             ) : (
               <TouchableOpacity
+                onPress={() =>
+                  handleSubmit(() => onSubmit(getValues() as SignIn))()
+                }
                 style={{ height: hp(6.5) }}
-                className="bg-rose-700 rounded-xl justify-center items-center"
+                className={`bg-rose-700
+               rounded-xl justify-center items-center`}
               >
                 <Text
                   style={{ fontSize: hp(2.7) }}
@@ -101,7 +124,7 @@ export default function SignIn() {
             >
               Don't have an account?{" "}
             </Text>
-            <Pressable onPress={() => router.push("signUp")}>
+            <Pressable onPress={() => router.push("/signUp")}>
               <Text
                 style={{ fontSize: hp(1.8) }}
                 className="font-semibold text-rose-500"
@@ -112,6 +135,6 @@ export default function SignIn() {
           </View>
         </View>
       </View>
-    </View>
+    </AvoidingKeyboard>
   );
 }
