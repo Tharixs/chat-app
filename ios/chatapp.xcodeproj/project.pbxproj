@@ -15,6 +15,7 @@
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		33C7313C924E4CDCA4D32E81 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5663AF06733F4D809E614182 /* noop-file.swift */; };
+		9A815F9A97354182AB2D930F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B9290A021F4340F19874650C /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-chatapp/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		5663AF06733F4D809E614182 /* noop-file.swift */ = {isa = PBXFileReference; name = "noop-file.swift"; path = "chatapp/noop-file.swift"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.swift; explicitFileType = undefined; includeInIndex = 0; };
 		F3EA65CE6680478B94AA33F3 /* chatapp-Bridging-Header.h */ = {isa = PBXFileReference; name = "chatapp-Bridging-Header.h"; path = "chatapp/chatapp-Bridging-Header.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		B9290A021F4340F19874650C /* GoogleService-Info.plist */ = {isa = PBXFileReference; name = "GoogleService-Info.plist"; path = "chatapp/GoogleService-Info.plist"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = text.plist.xml; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
 				5663AF06733F4D809E614182 /* noop-file.swift */,
 				F3EA65CE6680478B94AA33F3 /* chatapp-Bridging-Header.h */,
+				B9290A021F4340F19874650C /* GoogleService-Info.plist */,
 			);
 			name = chatapp;
 			sourceTree = "<group>";
@@ -199,6 +202,7 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
 				C118D09DFC234AF39C828898 /* chatapp-Bridging-Header.h in Resources */,
+				9A815F9A97354182AB2D930F /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

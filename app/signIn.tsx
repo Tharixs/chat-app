@@ -20,23 +20,23 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { AvoidingKeyboard } from "@/components/AvoidingKeyboard";
+import { useAuth } from "@/context/authContext";
 
 export default function SignIn() {
-  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
   const { control, formState, handleSubmit, getValues } = useForm({
     resolver: yupResolver(signInSchema),
     delayError: 300,
   });
   const onSubmit: SubmitHandler<SignIn> = async (data) => {
-    console.log(data.email, data.password);
+    await login(data.email, data.password);
   };
 
   return (
     <AvoidingKeyboard>
-      <StatusBar style="dark" />
       <View
         style={{ paddingTop: hp(8), paddingHorizontal: wp(5) }}
-        className="flex-1 gap-12"
+        className="flex-1 gap-12 bg-white"
       >
         <View className="items-center">
           <Image
@@ -95,15 +95,15 @@ export default function SignIn() {
         </View>
         <View className="gap-4">
           <View>
-            {loading ? (
+            {formState.isSubmitting ? (
               <View className="justify-center items-center">
                 <Loading size={hp(15.5)} />
               </View>
             ) : (
               <TouchableOpacity
-                onPress={() =>
-                  handleSubmit(() => onSubmit(getValues() as SignIn))()
-                }
+                onPress={() => {
+                  handleSubmit(() => onSubmit(getValues() as SignIn))();
+                }}
                 style={{ height: hp(6.5) }}
                 className={`bg-rose-700
                rounded-xl justify-center items-center`}

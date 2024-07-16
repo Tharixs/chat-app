@@ -20,23 +20,26 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { signUpSchema } from "@/schemas/auth/signUp.schema";
 import { AvoidingKeyboard } from "@/components/AvoidingKeyboard";
+import { useAuth } from "@/context/authContext";
 
 export default function SignUp() {
   const [loading, setLoading] = useState(false);
+  const { register } = useAuth();
   const { control, formState, handleSubmit, getValues } = useForm({
     resolver: yupResolver(signUpSchema),
     delayError: 300,
   });
   const onSubmit: SubmitHandler<SignUp> = async (data) => {
-    console.log(data.email, data.password);
+    setLoading(true);
+    await register(data.email, data.password, data.userName, data.imageUrl);
+    setLoading(false);
   };
 
   return (
     <AvoidingKeyboard>
-      <StatusBar style="dark" />
       <View
         style={{ paddingTop: hp(8), paddingHorizontal: wp(5) }}
-        className="flex-1 gap-12"
+        className="flex-1 gap-12 bg-white"
       >
         <View className="items-center">
           <Image
@@ -115,7 +118,7 @@ export default function SignUp() {
         </View>
         <View className="gap-4">
           <View>
-            {loading ? (
+            {formState.isSubmitting ? (
               <View className="justify-center items-center">
                 <Loading size={hp(15.5)} />
               </View>

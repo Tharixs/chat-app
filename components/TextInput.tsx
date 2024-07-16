@@ -33,8 +33,10 @@ const TextInput: React.FC<{
   return (
     <>
       <View
-        style={{ height: hp(7) }}
-        className="flex-row gap-4 px-4 bg-neutral-100 items-center rounded-xl"
+        style={{
+          height: hp(7),
+        }}
+        className="flex-row gap-4 px-4 bg-slate-200 items-center rounded-xl"
       >
         {props.icon}
         <Input

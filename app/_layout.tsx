@@ -9,16 +9,18 @@ const MainLayout = () => {
   const segments = useSegments();
 
   useEffect(() => {
-    if (typeof isAuthenticated === "undefined") return;
     const inApp = segments[0] === "(app)";
     if (isAuthenticated && !inApp) {
       router.replace("home");
-    } else if (!isAuthenticated) {
+    }
+    if (!isAuthenticated) {
       router.replace("signIn");
     }
   }, [isAuthenticated]);
 
-  return <Slot />;
+  return (
+    <Slot screenOptions={{ statusBarStyle: "dark", statusBarColor: "white" }} />
+  );
 };
 
 export default function RootLayout() {
