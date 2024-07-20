@@ -40,6 +40,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
             if (user) {
                 setIsAuthenticated(true)
                 setUser(user)
+                updateUser(user.uid)
             } else {
                 setIsAuthenticated(false)
                 setUser(null)
@@ -47,6 +48,21 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         })
         return unsubs
     }, [])
+
+    const updateUser = async (userId: string) => {
+        await firestore()
+            .collection('users')
+            .doc(userId)
+            .get()
+            .then((doc) => {
+                if (doc.exists) {
+                    setUser(doc.data() as FirebaseAuthTypes.User)
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
 
     const login = async (email: string, password: string) => {
         auth()
@@ -82,11 +98,10 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
             .createUserWithEmailAndPassword(email, password)
             .then(async (res) => {
                 console.log('Registered', res)
-                // add to cloud firestore
-                console.log('adding to firestore', email, userName, imageUrl)
                 await firestore()
                     .collection('users')
-                    .add({
+                    .doc(res.user?.uid)
+                    .set({
                         id: res.user?.uid,
                         name: userName,
                         email: email,

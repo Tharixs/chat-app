@@ -22,7 +22,7 @@ const TextInput: React.FC<{
                 style={{
                     height: hp(7),
                 }}
-                className="flex-row gap-4 px-4 bg-slate-200 items-center rounded-xl"
+                className="items-center flex-row bg-slate-100 px-4 rounded-xl"
             >
                 {props.icon}
                 <Input

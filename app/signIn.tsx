@@ -1,7 +1,7 @@
 import Loading from '@/components/Loading'
 import TextInput from '@/components/TextInput'
 import { signInSchema } from '@/schemas/auth/signIn.schema'
-import React from 'react'
+import React, { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native'
@@ -16,12 +16,14 @@ import { useAuth } from '@/context/authContext'
 
 export default function SignIn() {
     const { login } = useAuth()
+    const [loading, setLoading] = useState(false)
     const { control, formState, handleSubmit, getValues } = useForm({
         resolver: yupResolver(signInSchema),
         delayError: 300,
     })
     const onSubmit: SubmitHandler<SignIn> = async (data) => {
-        await login(data.email, data.password)
+        setLoading(true)
+        await login(data.email, data.password).then(() => setLoading(false))
     }
 
     return (
@@ -91,7 +93,7 @@ export default function SignIn() {
                 </View>
                 <View className="gap-4">
                     <View>
-                        {formState.isSubmitting ? (
+                        {loading ? (
                             <View className="justify-center items-center">
                                 <Loading size={hp(15.5)} />
                             </View>
