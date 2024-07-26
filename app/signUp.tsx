@@ -29,10 +29,10 @@ export default function SignUp() {
     }
 
     return (
-        <AvoidingKeyboard>
+        <AvoidingKeyboard className="flex-1 bg-white">
             <View
                 style={{ paddingTop: hp(8), paddingHorizontal: wp(5) }}
-                className="flex-1 gap-12 bg-white"
+                className="gap-12"
             >
                 <View className="items-center">
                     <Image

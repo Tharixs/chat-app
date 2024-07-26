@@ -12,7 +12,7 @@ export const AvoidingKeyboard: React.FC<AvoidingKeyboardType> = ({
 }) => {
     return (
         <KeyboardAvoidingView
-            style={{ flex: 1 }}
+            style={[{ flex: 1 }, props.style]}
             behavior={ios ? 'padding' : 'height'}
             {...props}
         >
