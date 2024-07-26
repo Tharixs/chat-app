@@ -18,8 +18,13 @@ export default function Profile() {
     const { user } = useAuth()
     const userData: User = user as unknown as User
     const { control } = useForm()
-    const { currentlyRunning, isUpdateAvailable, isUpdatePending } =
-        Updates.useUpdates()
+    const {
+        currentlyRunning,
+        isUpdateAvailable,
+        isUpdatePending,
+        isChecking,
+        isDownloading,
+    } = Updates.useUpdates()
 
     useEffect(() => {
         if (isUpdatePending) {

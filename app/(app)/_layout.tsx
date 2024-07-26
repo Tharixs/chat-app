@@ -1,8 +1,8 @@
 import HomeHeader from '@/components/home/HomeHeader'
 import { Feather } from '@expo/vector-icons'
-import { Stack } from 'expo-router'
+import { router, Stack } from 'expo-router'
 import React from 'react'
-import { Menu, MenuTrigger } from 'react-native-popup-menu'
+import { View } from 'react-native'
 
 export default function _layout() {
     return (
@@ -14,8 +14,19 @@ export default function _layout() {
             <Stack.Screen
                 name="chat"
                 options={{
-                    title: 'Chat Room',
+                    // title: 'Chat Room',
+                    headerTitle: '',
                     animation: 'slide_from_right',
+                    headerLeft: () => (
+                        <View>
+                            <Feather
+                                name="arrow-left"
+                                size={24}
+                                color="black"
+                                onPress={() => router.back()}
+                            />
+                        </View>
+                    ),
                 }}
             />
             <Stack.Screen
