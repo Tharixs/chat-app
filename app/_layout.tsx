@@ -18,11 +18,7 @@ const MainLayout = () => {
         }
     }, [isAuthenticated, segments])
 
-    return (
-        <Slot
-            screenOptions={{ statusBarStyle: 'dark', statusBarColor: 'white' }}
-        />
-    )
+    return <Slot />
 }
 
 export default function RootLayout() {

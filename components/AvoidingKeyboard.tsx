@@ -1,14 +1,20 @@
 import { Platform, KeyboardAvoidingView, ScrollView } from 'react-native'
-import React, { ReactNode } from 'react'
+import React from 'react'
 
 const ios = Platform.OS === 'ios'
-export const AvoidingKeyboard: React.FC<{ children?: ReactNode }> = ({
+
+type AvoidingKeyboardType = React.PropsWithChildren<
+    React.ComponentProps<typeof KeyboardAvoidingView>
+>
+export const AvoidingKeyboard: React.FC<AvoidingKeyboardType> = ({
     children,
+    ...props
 }) => {
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior={ios ? 'padding' : 'height'}
+            {...props}
         >
             <ScrollView
                 style={{ flex: 1 }}

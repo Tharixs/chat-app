@@ -9,6 +9,7 @@ import { blurHash } from '@/utils/common'
 import { Menu, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
 import MenuItem from '../pop-up-menu/MenuItem'
 import { AntDesign, Feather } from '@expo/vector-icons'
+import { router } from 'expo-router'
 
 const ios = Platform.OS === 'ios'
 const HomeHeader = () => {
@@ -60,7 +61,7 @@ const HomeHeader = () => {
                         }}
                     >
                         <MenuItem
-                            onClick={() => console.log('Profile')}
+                            onClick={() => router.push('/profile')}
                             text="Profile"
                             value={null}
                             icon={<Feather name="user" size={hp(2.5)} />}

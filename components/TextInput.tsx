@@ -10,14 +10,23 @@ const TextInput: React.FC<{
     placeholder?: string
     scureTextEntry?: boolean
     errorMessage?: string
+    value?: string
+    label?: string
 }> = (props) => {
     const { field } = useController({
         name: props.name ?? '',
         control: props.control,
         defaultValue: '',
     })
+
     return (
         <>
+            <Text
+                style={{ fontSize: hp(2) }}
+                className="font-bold text-neutral-600"
+            >
+                {props.label}
+            </Text>
             <View
                 style={{
                     height: hp(7),
@@ -31,12 +40,11 @@ const TextInput: React.FC<{
                     className="flex-1 font-semibold text-neutral-700"
                     placeholder={props.placeholder ?? ''}
                     placeholderTextColor={'grey'}
-                    onChangeText={field.onChange}
-                    value={field.value}
-                    secureTextEntry={props.scureTextEntry ?? false}
+                    onChangeText={field?.onChange}
+                    value={field?.value || props.value}
                 />
             </View>
-            {props.errorMessage ? (
+            {props.errorMessage && (
                 <View className="px-4">
                     <Text
                         style={{ fontSize: hp(1.5), color: 'rgb(239 68 68)' }}
@@ -45,7 +53,7 @@ const TextInput: React.FC<{
                         {props.errorMessage}
                     </Text>
                 </View>
-            ) : null}
+            )}
         </>
     )
 }

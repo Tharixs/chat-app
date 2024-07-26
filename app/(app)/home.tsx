@@ -29,7 +29,7 @@ export default function Home() {
     }
     return (
         <View className="flex-1 bg-white">
-            <StatusBar barStyle={'light-content'} />
+            <StatusBar barStyle={'dark-content'} />
             {users.length > 0 ? (
                 <ChatList users={users} />
             ) : (
