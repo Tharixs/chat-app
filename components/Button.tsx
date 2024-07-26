@@ -16,6 +16,7 @@ const Button: React.FC<
                 `items-center ${props.mode === 'contained' ? 'bg-rose-600' : 'border-2 border-rose-600'}  justify-center rounded-xl` +
                 (props.className ? ` ${props.className} ` : '')
             }
+            {...props}
         >
             <Text
                 style={{ fontSize: hp(2) }}

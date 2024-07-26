@@ -13,6 +13,7 @@ import { router } from 'expo-router'
 import { signUpSchema } from '@/schemas/auth/signUp.schema'
 import { AvoidingKeyboard } from '@/components/AvoidingKeyboard'
 import { useAuth } from '@/context/authContext'
+import Button from '@/components/Button'
 
 export default function SignUp() {
     const [loading, setLoading] = useState(false)
@@ -123,23 +124,15 @@ export default function SignUp() {
                                 <Loading size={hp(15.5)} />
                             </View>
                         ) : (
-                            <TouchableOpacity
+                            <Button
+                                mode="contained"
+                                label="Sign Up"
                                 onPress={() =>
                                     handleSubmit(() =>
                                         onSubmit(getValues() as SignUp)
                                     )()
                                 }
-                                style={{ height: hp(6.5) }}
-                                className={`bg-rose-700
-               rounded-xl justify-center items-center`}
-                            >
-                                <Text
-                                    style={{ fontSize: hp(2.7) }}
-                                    className="text-white font-bold tracking-wider text-center"
-                                >
-                                    Sign Up
-                                </Text>
-                            </TouchableOpacity>
+                            />
                         )}
                     </View>
                     <View className=" flex-row justify-center">
