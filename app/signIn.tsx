@@ -13,6 +13,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import { AvoidingKeyboard } from '@/components/AvoidingKeyboard'
 import { useAuth } from '@/context/authContext'
+import Button from '@/components/Button'
 
 export default function SignIn() {
     const { login } = useAuth()
@@ -98,23 +99,15 @@ export default function SignIn() {
                                 <Loading size={hp(15.5)} />
                             </View>
                         ) : (
-                            <TouchableOpacity
+                            <Button
+                                mode="contained"
+                                label="Sign In"
                                 onPress={() => {
                                     handleSubmit(() =>
                                         onSubmit(getValues() as SignIn)
                                     )()
                                 }}
-                                style={{ height: hp(6.5) }}
-                                className={`bg-rose-700
-               rounded-xl justify-center items-center`}
-                            >
-                                <Text
-                                    style={{ fontSize: hp(2.7) }}
-                                    className="text-white font-bold tracking-wider text-center"
-                                >
-                                    Sign In
-                                </Text>
-                            </TouchableOpacity>
+                            />
                         )}
                     </View>
                     <View className=" flex-row justify-center">

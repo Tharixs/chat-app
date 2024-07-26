@@ -21,12 +21,14 @@ const TextInput: React.FC<{
 
     return (
         <>
-            <Text
-                style={{ fontSize: hp(2) }}
-                className="font-bold text-neutral-600"
-            >
-                {props.label}
-            </Text>
+            {props.label && (
+                <Text
+                    style={{ fontSize: hp(2) }}
+                    className="font-bold text-neutral-600"
+                >
+                    {props.label}
+                </Text>
+            )}
             <View
                 style={{
                     height: hp(7),
@@ -41,6 +43,7 @@ const TextInput: React.FC<{
                     placeholder={props.placeholder ?? ''}
                     placeholderTextColor={'grey'}
                     onChangeText={field?.onChange}
+                    secureTextEntry={props.scureTextEntry}
                     value={field?.value || props.value}
                 />
             </View>
