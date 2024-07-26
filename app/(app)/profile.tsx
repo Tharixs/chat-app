@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { Image } from 'expo-image'
 import { useAuth } from '@/context/authContext'
