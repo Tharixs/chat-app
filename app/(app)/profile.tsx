@@ -27,6 +27,8 @@ export default function Profile() {
         }
     }, [isUpdatePending])
 
+    const showButtonUpdate = isUpdateAvailable
+
     const runTypeMessage = currentlyRunning.isEmbeddedLaunch
         ? 'This app is running from built-in code'
         : 'This app is running an update'
@@ -82,16 +84,17 @@ export default function Profile() {
                     onPress={() => {}}
                 />
                 <Button
-                    label={`${isUpdateAvailable ? 'Update' : 'Check For Updates'}`}
+                    label="Check For Updates"
                     mode="outline"
-                    onPress={() => {
-                        if (isUpdateAvailable) {
-                            Updates.fetchUpdateAsync()
-                        } else {
-                            Updates.checkForUpdateAsync()
-                        }
-                    }}
+                    onPress={() => Updates.checkForUpdateAsync()}
                 />
+                {showButtonUpdate ? (
+                    <Button
+                        label="Update App"
+                        mode="outline"
+                        onPress={() => Updates.fetchUpdateAsync()}
+                    />
+                ) : null}
                 <Text
                     style={{ fontSize: hp(2) }}
                     className="text-neutral-600 font-semibold tracking-wider text-center"
