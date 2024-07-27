@@ -55,7 +55,7 @@ export default function _layout() {
                         </View>
                     ),
                     headerRight: () => (
-                        <View className="flex-row items-center gap-4">
+                        <View className="flex-row items-center gap-4 bg-rose-800">
                             <TouchableOpacity>
                                 <Feather
                                     name="video"
