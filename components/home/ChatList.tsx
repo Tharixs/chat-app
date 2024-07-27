@@ -3,12 +3,11 @@ import React from 'react'
 import ChatItem from './ChatItem'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
 import { User } from '@/interfaces/user/user.interfaces'
-import { useUsers } from '@/hooks/useUsers'
 
 export default function ChatList({
     users,
     refetch,
-    loading
+    loading,
 }: {
     users: FirebaseFirestoreTypes.DocumentData[]
     refetch: () => void

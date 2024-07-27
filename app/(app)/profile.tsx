@@ -18,13 +18,7 @@ export default function Profile() {
     const { user } = useAuth()
     const userData: User = user as unknown as User
     const { control } = useForm()
-    const {
-        currentlyRunning,
-        isUpdateAvailable,
-        isUpdatePending,
-        isChecking,
-        isDownloading,
-    } = Updates.useUpdates()
+    const { isUpdateAvailable, isUpdatePending } = Updates.useUpdates()
 
     useEffect(() => {
         if (isUpdatePending) {
@@ -33,10 +27,6 @@ export default function Profile() {
     }, [isUpdatePending])
 
     const showButtonUpdate = isUpdateAvailable
-
-    const runTypeMessage = currentlyRunning.isEmbeddedLaunch
-        ? 'This app is running from built-in code'
-        : 'This app is running an update'
 
     return (
         <AvoidingKeyboard className="flex-1 bg-white">
@@ -89,22 +79,23 @@ export default function Profile() {
                     onPress={() => {}}
                 />
                 <Button
-                    label="Check For Updates"
+                    label={
+                        showButtonUpdate
+                            ? `Update Available`
+                            : `Check For Updates`
+                    }
                     mode="outline"
-                    onPress={() => Updates.checkForUpdateAsync()}
+                    onPress={() =>
+                        showButtonUpdate
+                            ? Updates.fetchUpdateAsync()
+                            : Updates.checkForUpdateAsync()
+                    }
                 />
-                {showButtonUpdate ? (
-                    <Button
-                        label="Update App"
-                        mode="outline"
-                        onPress={() => Updates.fetchUpdateAsync()}
-                    />
-                ) : null}
                 <Text
                     style={{ fontSize: hp(2) }}
                     className="text-neutral-600 font-semibold tracking-wider text-center"
                 >
-                    {runTypeMessage}
+                    Version: {Updates.runtimeVersion}
                 </Text>
             </View>
         </AvoidingKeyboard>

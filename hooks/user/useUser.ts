@@ -3,13 +3,15 @@ import { useAuth } from '@/context/authContext'
 import firestore, {
     FirebaseFirestoreTypes,
 } from '@react-native-firebase/firestore'
+import { User } from '@/interfaces/user/user.interfaces'
 
-export const useUsers = () => {
+export const useUser = () => {
     const { user } = useAuth()
     const [loading, setLoading] = useState(true)
     const [users, setUsers] = useState<FirebaseFirestoreTypes.DocumentData[]>(
         []
     )
+    const [userById, setUserById] = useState<User | null>(null)
 
     useEffect(() => {
         if (user?.uid) {
@@ -32,5 +34,22 @@ export const useUsers = () => {
             setLoading(false)
         }
     }
-    return { users, fetchUsers, loading }
+
+    const fetchUsersById = async (userId: string) => {
+        try {
+            const querySnapshot = await firestore()
+                .collection('users')
+                .where('id', '==', userId)
+                .get()
+            const users = querySnapshot.docs.map((doc) => doc.data())
+            console.log('users', users[0])
+            setUserById(users[0] as User)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    return { users, fetchUsers, loading, fetchUsersById, userById }
 }

@@ -4,7 +4,7 @@ import { signInSchema } from '@/schemas/auth/signIn.schema'
 import React, { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Pressable, Text, View } from 'react-native'
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,

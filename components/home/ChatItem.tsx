@@ -15,12 +15,12 @@ export default function ChatItem({
 }) {
     return (
         <TouchableOpacity
-            onPress={() =>
+            onPress={() => {
                 router.push({
                     pathname: '/chat',
-                    params: item as any,
+                    params: { item: JSON.stringify(item ?? '{}') as any },
                 })
-            }
+            }}
             className={`flex-row justify-between mx-4 items-center pb-2 mb-2 gap-2 ${noBorder ? 'border-0' : 'border-b-[1px] border-neutral-300'}`}
         >
             <Image
