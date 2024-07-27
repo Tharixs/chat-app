@@ -1,10 +1,11 @@
-import { View, Text, TextInput as Input } from 'react-native'
+import { View, Text, TextInput as Input, TouchableOpacity } from 'react-native'
 import React, { ReactElement } from 'react'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { Control, FieldValues, useController } from 'react-hook-form'
 
 const TextInput: React.FC<{
     icon?: ReactElement
+    positionIcon?: 'left' | 'right'
     control?: Control<FieldValues>
     name?: string
     placeholder?: string
@@ -12,7 +13,7 @@ const TextInput: React.FC<{
     errorMessage?: string
     value?: string
     label?: string
-}> = (props) => {
+}> = ({ positionIcon = 'left', ...props }) => {
     const { field } = useController({
         name: props.name ?? '',
         control: props.control,
@@ -35,7 +36,9 @@ const TextInput: React.FC<{
                 }}
                 className="items-center flex-row bg-slate-100 px-4 rounded-xl"
             >
-                {props.icon}
+                <TouchableOpacity>
+                    {positionIcon === 'left' && props.icon && props.icon}
+                </TouchableOpacity>
                 <Input
                     {...props}
                     style={{ fontSize: hp(2) }}
@@ -46,6 +49,9 @@ const TextInput: React.FC<{
                     secureTextEntry={props.scureTextEntry}
                     value={field?.value || props.value}
                 />
+                <TouchableOpacity>
+                    {positionIcon === 'right' && props.icon && props.icon}
+                </TouchableOpacity>
             </View>
             {props.errorMessage && (
                 <View className="px-4">

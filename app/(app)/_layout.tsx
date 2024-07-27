@@ -24,10 +24,9 @@ export default function _layout() {
             <Stack.Screen
                 name="chat"
                 options={{
-                    // title: 'Chat Room',
                     headerTitle: '',
                     animation: 'slide_from_right',
-                    headerShadowVisible: false,
+                    headerShadowVisible: true,
                     headerLeft: () => (
                         <View className="flex-row items-center gap-4">
                             <Feather
@@ -60,14 +59,14 @@ export default function _layout() {
                                 <Feather
                                     name="video"
                                     size={24}
-                                    color={'rgb(82 82 82)'}
+                                    color={'rgb(115 115 115)'}
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity>
                                 <Feather
                                     name="phone"
                                     size={24}
-                                    color={'rgb(82 82 82)'}
+                                    color={'rgb(115 115 115)'}
                                 />
                             </TouchableOpacity>
                         </View>

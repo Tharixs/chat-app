@@ -20,5 +20,5 @@ expo-env.d.ts
 # @end expo-cli
 
 # android and ios folder
-# android/
-# ios/
+android/
+ios/
