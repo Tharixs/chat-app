@@ -1,6 +1,7 @@
 import React, {
     ReactNode,
     createContext,
+    useCallback,
     useContext,
     useEffect,
     useState,
@@ -20,6 +21,11 @@ type AuthContextProps = {
         email: string,
         password: string,
         userName: string,
+        imageUrl?: string
+    ) => Promise<void>
+    updateUserProfile: (
+        userId: string,
+        name: string,
         imageUrl?: string
     ) => Promise<void>
 }
@@ -121,6 +127,21 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
             })
     }
 
+    const updateUserProfile = useCallback(
+        async (userId: string, name: string, imageUrl?: string) => {
+            try {
+                await firestore().collection('users').doc(userId).update({
+                    name: name,
+                    imageUrl: imageUrl,
+                })
+                console.log('User updated')
+            } catch (error) {
+                console.error('Error updating user:', error)
+            }
+        },
+        []
+    )
+
     return (
         <AuthContext.Provider
             value={{
@@ -129,6 +150,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
                 login,
                 loginOut,
                 register,
+                updateUserProfile,
             }}
         >
             {children}

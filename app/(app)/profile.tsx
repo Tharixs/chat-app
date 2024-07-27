@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native'
+import { Alert, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { Image } from 'expo-image'
 import { useAuth } from '@/context/authContext'
@@ -9,16 +9,22 @@ import {
 } from 'react-native-responsive-screen'
 import { blurHash } from '@/utils/common'
 import TextInput from '@/components/TextInput'
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { AvoidingKeyboard } from '@/components/AvoidingKeyboard'
 import Button from '@/components/Button'
 import * as Updates from 'expo-updates'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { userUpdateProfileSchema } from '@/schemas/user/userUpdateProfile.schema'
+import throttle from '@/utils/throttle'
 
 export default function Profile() {
-    const { user } = useAuth()
+    const { user, updateUserProfile } = useAuth()
     const userData: User = user as unknown as User
-    const { control } = useForm()
+    const { control, handleSubmit, getValues } = useForm({
+        resolver: yupResolver(userUpdateProfileSchema),
+    })
     const { isUpdateAvailable, isUpdatePending } = Updates.useUpdates()
+    console.log(userData?.id)
 
     useEffect(() => {
         if (isUpdatePending) {
@@ -27,6 +33,20 @@ export default function Profile() {
     }, [isUpdatePending])
 
     const showButtonUpdate = isUpdateAvailable
+
+    const handleUpdateProfile: SubmitHandler<{
+        name: string
+        imageUrl: string
+    }> = throttle(async (data: { name: string; imageUrl: string }) => {
+        console.log(data)
+        await updateUserProfile(userData?.id, data.name, data.imageUrl)
+            .then(() => {
+                Alert.alert('Profile Updated', 'Your profile has been updated')
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }, 1000)
 
     return (
         <AvoidingKeyboard className="flex-1 bg-white">
@@ -54,10 +74,10 @@ export default function Profile() {
                 </View>
                 <View style={{ marginTop: hp(4) }} className="gap-4">
                     <TextInput
-                        label="Email"
                         control={control}
+                        name="email"
+                        label="Email"
                         value={userData.email}
-                        name="eamil"
                         placeholder="Name"
                     />
                     <TextInput
@@ -76,7 +96,16 @@ export default function Profile() {
                 <Button
                     label="Update Profile"
                     mode="contained"
-                    onPress={() => {}}
+                    onPress={() =>
+                        handleSubmit(() =>
+                            handleUpdateProfile(
+                                getValues() as {
+                                    name: string
+                                    imageUrl: string
+                                }
+                            )
+                        )()
+                    }
                 />
                 <Button
                     label={
