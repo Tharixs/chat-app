@@ -1,10 +1,12 @@
-import { View, Text, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { router } from 'expo-router'
 import { Image } from 'expo-image'
+import { router } from 'expo-router'
+import React from 'react'
+import { Text, TouchableOpacity, View } from 'react-native'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
-import { blurHash } from '@/utils/common'
+
 import { User } from '@/interfaces/user/user.interfaces'
+import { blurHash } from '@/utils/common'
+import throttle from '@/utils/throttle'
 
 export default function ChatItem({
     item,
@@ -13,14 +15,16 @@ export default function ChatItem({
     item: User
     noBorder: boolean
 }) {
+    const handleChatPress = throttle(() => {
+        router.push({
+            pathname: '/chat',
+            params: { item: JSON.stringify(item ?? '{}') as any },
+        })
+    }, 1000)
+
     return (
         <TouchableOpacity
-            onPress={() => {
-                router.push({
-                    pathname: '/chat',
-                    params: { item: JSON.stringify(item ?? '{}') as any },
-                })
-            }}
+            onPress={handleChatPress}
             className={`flex-row justify-between mx-4 items-center pb-2 mb-2 gap-2 ${noBorder ? 'border-0' : 'border-b-[1px] border-neutral-300'}`}
         >
             <Image
