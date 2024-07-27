@@ -55,7 +55,7 @@ export default function _layout() {
                         </View>
                     ),
                     headerRight: () => (
-                        <View className="flex-row items-center gap-4 bg-rose-800">
+                        <View className="flex-row items-center gap-4">
                             <TouchableOpacity>
                                 <Feather
                                     name="video"
@@ -77,9 +77,27 @@ export default function _layout() {
             <Stack.Screen
                 name="profile"
                 options={{
-                    title: 'Profile User',
                     animation: 'slide_from_right',
                     headerShadowVisible: false,
+                    headerTitle: '',
+                    headerLeft: () => (
+                        <TouchableOpacity
+                            className="flex-row items-center gap-4"
+                            onPress={() => router.back()}
+                        >
+                            <Feather
+                                name="arrow-left"
+                                size={24}
+                                color="black"
+                            />
+                            <Text
+                                style={{ fontSize: hp(2) }}
+                                className="font-semibold text-neutral-800"
+                            >
+                                Profile
+                            </Text>
+                        </TouchableOpacity>
+                    ),
                 }}
             />
         </Stack>
