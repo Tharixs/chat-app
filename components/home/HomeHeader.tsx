@@ -3,8 +3,7 @@ import { Image } from 'expo-image'
 import React from 'react'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAuth } from '@/context/authContext'
-import { User } from '@/interfaces/user/user.interfaces'
+import { useAuthContext } from '@/context/authContext'
 import { blurHash } from '@/utils/common'
 import { Menu, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
 import MenuItem from '../pop-up-menu/MenuItem'
@@ -14,7 +13,7 @@ import { router } from 'expo-router'
 const ios = Platform.OS === 'ios'
 const HomeHeader = () => {
     const { top } = useSafeAreaInsets()
-    const { user, loginOut } = useAuth()
+    const { user, handleLogout } = useAuthContext()
     const userData: User = user as unknown as User
     return (
         <View
@@ -39,7 +38,8 @@ const HomeHeader = () => {
                                 borderRadius: 100,
                             }}
                             source={
-                                userData.imageUrl || 'https://i.pravatar.cc/300'
+                                userData?.imageUrl ||
+                                'https://i.pravatar.cc/300'
                             }
                             contentFit="cover"
                             transition={800}
@@ -68,7 +68,7 @@ const HomeHeader = () => {
                         />
                         <View className="border-b p-[1px] border-gray-300 mx-3" />
                         <MenuItem
-                            onClick={loginOut}
+                            onClick={handleLogout}
                             text="Sign out"
                             value={null}
                             icon={

@@ -4,28 +4,27 @@ import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import TextInput from '@/components/TextInput'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Feather } from '@expo/vector-icons'
-import ChatMessageList from '@/components/chat/ChatMessageList'
 import { useGlobalSearchParams } from 'expo-router'
-import { User } from '@/interfaces/user/user.interfaces'
 import throttle from '@/utils/throttle'
-import { useRoomChat } from '@/context/roomChatContext'
-import { useAuth } from '@/context/authContext'
+import { useAuthContext } from '@/context/authContext'
+import { useRoomChat } from '@/hooks/useRoomChat'
+import { ChatMessageList } from '@/components/chat/ChatMessageList'
 
 export default function Chat() {
-    const user = useAuth().user as unknown as User
+    const user = useAuthContext().user
     const item = JSON.parse(useGlobalSearchParams()?.item as string)
     const { control, handleSubmit, getValues, reset } = useForm()
-    const { createRoomChatIfNotExists, getAllMessages, sendMessage } =
-        useRoomChat()
+    const { getAllMessages, sendMessage, messages, loading } = useRoomChat()
 
     useEffect(() => {
-        createRoomChatIfNotExists(user?.id, item?.id)
-        getAllMessages(user?.id, item?.id)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+        if (!user || !item) return
+        const unsubscribe = getAllMessages(user?.id, item?.id)
+        return unsubscribe
+    }, [getAllMessages, item, user])
 
     const handleSendMessage: SubmitHandler<{ message: string }> = throttle(
         async (data: { message: string }) => {
+            if (!user || !item) return
             await sendMessage(user?.id, item?.id, data.message).then(() => {
                 reset()
             })
@@ -36,7 +35,15 @@ export default function Chat() {
     return (
         <KeyboardAvoidingView className="flex-1 bg-white px-4">
             <View className="flex-1">
-                <ChatMessageList />
+                <ChatMessageList
+                    loading={
+                        loading.createRoomChat ||
+                        loading.getMessages ||
+                        loading.sendMessage
+                    }
+                    refetch={() => user && getAllMessages(user?.id, item?.id)}
+                    messages={messages}
+                />
             </View>
             <View style={{ marginBottom: hp(2.7) }} className="pt-2">
                 <TextInput

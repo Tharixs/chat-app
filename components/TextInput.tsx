@@ -3,17 +3,17 @@ import React, { ReactElement } from 'react'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { Control, FieldValues, useController } from 'react-hook-form'
 
-const TextInput: React.FC<{
-    icon?: ReactElement
-    positionIcon?: 'left' | 'right'
-    control?: Control<FieldValues>
-    name?: string
-    placeholder?: string
-    scureTextEntry?: boolean
-    errorMessage?: string
-    value?: string
-    label?: string
-}> = ({ positionIcon = 'left', ...props }) => {
+const TextInput: React.FC<
+    {
+        icon?: ReactElement
+        positionIcon?: 'left' | 'right'
+        control?: Control<FieldValues>
+        name?: string
+        errorMessage?: string
+        value?: string
+        label?: string
+    } & React.ComponentProps<typeof Input>
+> = ({ positionIcon = 'left', editable = true, ...props }) => {
     const { field } = useController({
         name: props.name ?? '',
         control: props.control,
@@ -41,12 +41,10 @@ const TextInput: React.FC<{
                 </TouchableOpacity>
                 <Input
                     {...props}
-                    style={{ fontSize: hp(2) }}
-                    className="flex-1 font-semibold text-neutral-700"
-                    placeholder={props.placeholder ?? ''}
+                    style={[{ fontSize: hp(2) }, props.style]}
+                    className={`flex-1 font-semibold ${editable ? 'text-neutral-700' : 'text-neutral-400'}`}
                     placeholderTextColor={'grey'}
                     onChangeText={field?.onChange}
-                    secureTextEntry={props.scureTextEntry}
                     value={field?.value || props.value}
                 />
                 <TouchableOpacity>

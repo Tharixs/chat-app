@@ -1,8 +1,7 @@
-import { Alert, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { Image } from 'expo-image'
-import { useAuth } from '@/context/authContext'
-import { User } from '@/interfaces/user/user.interfaces'
+import { useAuthContext } from '@/context/authContext'
 import {
     heightPercentageToDP as hp,
     widthPercentageToDP as wp,
@@ -15,16 +14,16 @@ import Button from '@/components/Button'
 import * as Updates from 'expo-updates'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { userUpdateProfileSchema } from '@/schemas/user/userUpdateProfile.schema'
+import { router } from 'expo-router'
 import throttle from '@/utils/throttle'
 
 export default function Profile() {
-    const { user, updateUserProfile } = useAuth()
+    const { user, handleUpdateUserProfile, refetchUser } = useAuthContext()
     const userData: User = user as unknown as User
     const { control, handleSubmit, getValues } = useForm({
         resolver: yupResolver(userUpdateProfileSchema),
     })
     const { isUpdateAvailable, isUpdatePending } = Updates.useUpdates()
-    console.log(userData?.id)
 
     useEffect(() => {
         if (isUpdatePending) {
@@ -33,20 +32,19 @@ export default function Profile() {
     }, [isUpdatePending])
 
     const showButtonUpdate = isUpdateAvailable
-
-    const handleUpdateProfile: SubmitHandler<{
-        name: string
-        imageUrl: string
-    }> = throttle(async (data: { name: string; imageUrl: string }) => {
-        console.log(data)
-        await updateUserProfile(userData?.id, data.name, data.imageUrl)
-            .then(() => {
-                Alert.alert('Profile Updated', 'Your profile has been updated')
+    const handleUpdateProfile: SubmitHandler<Partial<User>> = throttle(
+        async (data: Partial<User>) => {
+            await handleUpdateUserProfile(
+                userData.id,
+                data.name,
+                data.imageUrl
+            ).then(async () => {
+                await refetchUser()
+                router.replace('home')
             })
-            .catch((error) => {
-                console.log(error)
-            })
-    }, 1000)
+        },
+        1000
+    )
 
     return (
         <AvoidingKeyboard className="flex-1 bg-white">
@@ -79,6 +77,7 @@ export default function Profile() {
                         label="Email"
                         value={userData.email}
                         placeholder="Name"
+                        editable={false}
                     />
                     <TextInput
                         label="User Name"
@@ -97,14 +96,7 @@ export default function Profile() {
                     label="Update Profile"
                     mode="contained"
                     onPress={() =>
-                        handleSubmit(() =>
-                            handleUpdateProfile(
-                                getValues() as {
-                                    name: string
-                                    imageUrl: string
-                                }
-                            )
-                        )()
+                        handleSubmit(() => handleUpdateProfile(getValues()))()
                     }
                 />
                 <Button

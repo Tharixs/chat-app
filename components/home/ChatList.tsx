@@ -2,7 +2,6 @@ import { View, FlatList, Text, RefreshControl } from 'react-native'
 import React from 'react'
 import ChatItem from './ChatItem'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
-import { User } from '@/interfaces/user/user.interfaces'
 
 export default function ChatList({
     users,

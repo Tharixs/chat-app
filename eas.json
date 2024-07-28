@@ -1,15 +1,16 @@
 {
     "cli": {
-        "version": ">= 10.2.1"
+        "version": ">= 10.2.1",
+        "appVersionSource": "remote"
     },
     "build": {
         "dev": {
             "distribution": "internal",
             "channel": "dev",
+            "autoIncrement": true,
             "android": {
                 "buildType": "apk",
                 "applicationArchivePath": "android/app/build/outputs/**/*.{apk,aab}",
-                "autoIncrement": "version"
             },
             "ios": {
                 "simulator": true

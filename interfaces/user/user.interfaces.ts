@@ -1,4 +1,5 @@
-export interface User {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface User {
     createdAt: CreatedAt
     email: string
     id: string

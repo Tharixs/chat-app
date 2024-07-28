@@ -1,14 +1,19 @@
-import { getRoomId } from '@/utils/getRoomId'
-import firestore, {
-    collection,
-    FirebaseFirestoreTypes,
-} from '@react-native-firebase/firestore'
-import React, { useCallback, useContext, useState } from 'react'
+import {
+    createRoomChatIfNotExists,
+    getAllMessages,
+    sendMessage,
+} from '@/services/roomChatService'
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
+import React, { useCallback, useState } from 'react'
 import { Alert } from 'react-native'
 
 type RoomChatContextType = {
     messages: FirebaseFirestoreTypes.DocumentData[]
-    loading: boolean
+    loading: {
+        createRoomChat: boolean
+        sendMessage: boolean
+        getMessages: boolean
+    }
     createRoomChatIfNotExists: (
         userSenderId: string,
         userReceiverId: string
@@ -25,66 +30,51 @@ const RoomChatContext = React.createContext<RoomChatContextType | null>(null)
 export const RoomChatProvider: React.FC<React.PropsWithChildren> = ({
     children,
 }) => {
-    const [loading, setLoading] = useState<boolean>(false)
+    const [loading, setLoading] = useState<{
+        createRoomChat: boolean
+        sendMessage: boolean
+        getMessages: boolean
+    }>({
+        createRoomChat: false,
+        sendMessage: false,
+        getMessages: false,
+    })
     const [messages, setMessages] = useState<
         FirebaseFirestoreTypes.DocumentData[]
     >([])
-    const createRoomChatIfNotExists = useCallback(
-        async (userSenderId: string, userReceiverId: string) => {
-            setLoading(true)
-            const roomId = getRoomId(userSenderId, userReceiverId)
-            try {
-                await firestore().collection('rooms').doc(roomId).set({
-                    id: roomId,
-                    createdAt: firestore.FieldValue.serverTimestamp(),
-                })
-            } catch (error: any) {
-                Alert.alert('Error creating room chat', error.message)
-            } finally {
-                setLoading(false)
-            }
-        },
-        []
-    )
 
-    const sendMessage = useCallback(
-        async (
-            userSenderId: string,
-            userReceiverId: string,
-            message: string
-        ) => {
-            setLoading(true)
+    const handleCreateRoomChat = useCallback(
+        async (userSenderId: string, userReceiverId: string) => {
+            setLoading((prev) => ({ ...prev, createRoomChat: true }))
             try {
-                const roomId = getRoomId(userSenderId, userReceiverId)
-                const docRef = firestore().collection('rooms').doc(roomId)
-                const messageRef = collection(docRef, 'messages')
-                await messageRef.add({
-                    userId: userSenderId,
-                    text: message,
-                    createdAt: firestore.FieldValue.serverTimestamp(),
-                })
+                await createRoomChatIfNotExists(userSenderId, userReceiverId)
             } catch (error: any) {
                 Alert.alert('Error sending message', error.message)
             } finally {
-                setLoading(false)
+                setLoading((prev) => ({ ...prev, createRoomChat: false }))
             }
         },
         []
     )
 
-    const getAllMessages = useCallback(
+    const handleSendMessage = async (
+        userSenderId: string,
+        userReceiverId: string,
+        message: string
+    ) => {
+        setLoading((prev) => ({ ...prev, sendMessage: true }))
+        try {
+            await sendMessage(userSenderId, userReceiverId, message)
+        } catch (error: any) {
+            Alert.alert('Error sending message', error.message)
+        } finally {
+            setLoading((prev) => ({ ...prev, sendMessage: false }))
+        }
+    }
+
+    const handleGetAllMessages = useCallback(
         (userSenderId: string, userReceiverId: string) => {
-            const roomId = getRoomId(userSenderId, userReceiverId)
-            const messageRef = firestore()
-                .collection('rooms')
-                .doc(roomId)
-                .collection('messages')
-                .orderBy('createdAt', 'asc')
-            const unsubscribe = messageRef.onSnapshot((querySnapshot) => {
-                const messages = querySnapshot.docs.map((doc) => doc.data())
-                setMessages([...messages])
-            })
-            return unsubscribe
+            return getAllMessages(userSenderId, userReceiverId, setMessages)
         },
         []
     )
@@ -94,9 +84,9 @@ export const RoomChatProvider: React.FC<React.PropsWithChildren> = ({
             value={{
                 messages,
                 loading,
-                createRoomChatIfNotExists,
-                sendMessage,
-                getAllMessages,
+                createRoomChatIfNotExists: handleCreateRoomChat,
+                sendMessage: handleSendMessage,
+                getAllMessages: handleGetAllMessages,
             }}
         >
             {children}
@@ -104,10 +94,4 @@ export const RoomChatProvider: React.FC<React.PropsWithChildren> = ({
     )
 }
 
-export const useRoomChat = () => {
-    const value = useContext(RoomChatContext)
-    if (!value) {
-        throw new Error('useRoomChat must be used within an RoomChatProvider')
-    }
-    return value
-}
+export default RoomChatContext

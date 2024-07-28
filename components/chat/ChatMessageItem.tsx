@@ -14,7 +14,7 @@ export const ChatMessageItem: React.FC<{
             <View className="mb-4">
                 <View
                     style={{ maxWidth: wp(80) }}
-                    className="flex self-end rounded-2xl bg-neutral-100 p-3 px-4"
+                    className="flex self-end rounded-2xl bg-neutral-100 p-3 px-3"
                 >
                     <Text
                         style={{ fontSize: hp(1.9) }}

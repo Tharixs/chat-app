@@ -12,11 +12,11 @@ import {
 import { Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import { AvoidingKeyboard } from '@/components/AvoidingKeyboard'
-import { useAuth } from '@/context/authContext'
+import { useAuthContext } from '@/context/authContext'
 import Button from '@/components/Button'
 
 export default function SignIn() {
-    const { login } = useAuth()
+    const { handleLogin } = useAuthContext()
     const [loading, setLoading] = useState(false)
     const { control, formState, handleSubmit, getValues } = useForm({
         resolver: yupResolver(signInSchema),
@@ -24,7 +24,9 @@ export default function SignIn() {
     })
     const onSubmit: SubmitHandler<SignIn> = async (data) => {
         setLoading(true)
-        await login(data.email, data.password).then(() => setLoading(false))
+        await handleLogin(data.email, data.password).then(() =>
+            setLoading(false)
+        )
     }
 
     return (
