@@ -53,7 +53,7 @@ export const getAllMessages = (
         .collection('rooms')
         .doc(roomId)
         .collection('messages')
-        .orderBy('createdAt', 'asc')
+        .orderBy('createdAt', 'desc')
     return messageRef.onSnapshot((querySnapshot) => {
         const messages = querySnapshot.docs.map((doc) => doc.data())
         setMessages(messages)

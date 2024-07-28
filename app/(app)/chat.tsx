@@ -1,5 +1,11 @@
-import { KeyboardAvoidingView, TouchableOpacity, View } from 'react-native'
-import React, { useEffect } from 'react'
+import {
+    FlatList,
+    Keyboard,
+    KeyboardAvoidingView,
+    TouchableOpacity,
+    View,
+} from 'react-native'
+import React, { useEffect, useRef } from 'react'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import TextInput from '@/components/TextInput'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -15,6 +21,7 @@ export default function Chat() {
     const item = JSON.parse(useGlobalSearchParams()?.item as string)
     const { control, handleSubmit, getValues, reset } = useForm()
     const { getAllMessages, sendMessage, messages, loading } = useRoomChat()
+    const ref = useRef<FlatList<any>>(null)
 
     useEffect(() => {
         if (!user || !item) return
@@ -28,6 +35,9 @@ export default function Chat() {
             await sendMessage(user?.id, item?.id, data.message).then(() => {
                 reset()
             })
+            setTimeout(() => {
+                ref.current?.scrollToEnd({ animated: true })
+            }, 100)
         },
         1000
     )

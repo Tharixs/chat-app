@@ -1,5 +1,5 @@
-import { FlatList, RefreshControl, Text, View } from 'react-native'
-import React from 'react'
+import { FlatList, Keyboard, RefreshControl, Text, View } from 'react-native'
+import React, { useRef } from 'react'
 import { ChatMessageItem } from './ChatMessageItem'
 import { useAuthContext } from '@/context/authContext'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
@@ -15,14 +15,18 @@ export const ChatMessageList: React.FC<{
 
     return (
         <FlatList
+            scrollEventThrottle={16}
+            inverted
             data={props.messages}
             refreshControl={
                 <RefreshControl
                     refreshing={props.loading}
                     onRefresh={props.refetch}
+                    colors={['white']}
+                    progressBackgroundColor="rgb(225 29 72)"
                 />
             }
-            contentContainerStyle={{ marginTop: 16 }}
+            contentContainerStyle={{ marginBottom: 16 }}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={() => (
                 <>
