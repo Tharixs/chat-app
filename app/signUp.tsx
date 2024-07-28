@@ -111,7 +111,7 @@ export default function SignUp() {
                         control={control}
                         name="password"
                         placeholder="Password"
-                        scureTextEntry={true}
+                        secureTextEntry={true}
                         errorMessage={String(
                             formState.errors.password?.message ?? ''
                         )}
