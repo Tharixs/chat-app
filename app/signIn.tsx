@@ -4,7 +4,7 @@ import { signInSchema } from '@/schemas/auth/signIn.schema'
 import React, { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Image, Pressable, Text, View } from 'react-native'
+import { Alert, Image, Pressable, Text, View } from 'react-native'
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -26,6 +26,8 @@ export default function SignIn() {
         setLoading(true)
         try {
             await handleLogin(data.email, data.password)
+        } catch (err) {
+            Alert.alert('Error login', `${(err as Error).message}`)
         } finally {
             setLoading(false)
         }

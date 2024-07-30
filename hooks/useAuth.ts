@@ -39,7 +39,7 @@ export const useAuth = () => {
             await login(email, password)
         } catch (error) {
             console.log(error)
-            throw new Error('Error login')
+            throw error
         }
     }
 
@@ -60,8 +60,8 @@ export const useAuth = () => {
         try {
             await register(email, password, userName)
         } catch (error) {
-            console.log(error)
-            throw new Error('Error register')
+            console.log('register eror', error)
+            throw error
         }
     }
     const handleUpdateUserProfile = async (
@@ -87,17 +87,16 @@ export const useAuth = () => {
     }
 
     const fetchAllUsers = useCallback(async () => {
-        const userData = user as unknown as User
-        if (userData) {
+        if (auth().currentUser) {
             try {
-                return await getAllUsers(userData?.id)
+                return await getAllUsers(auth().currentUser?.uid!)
             } catch (error) {
                 console.log('fetchAllUsers', error)
-                throw new Error('Error fetching all users')
+                throw error
             }
         }
         return []
-    }, [user])
+    }, [])
 
     const refetchUser = useCallback(async () => {
         const userData = auth().currentUser

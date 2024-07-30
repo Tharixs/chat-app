@@ -3,7 +3,14 @@ import TextInput from '@/components/TextInput'
 import React, { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native'
+import {
+    Alert,
+    Image,
+    Pressable,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native'
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -23,9 +30,17 @@ export default function SignUp() {
         delayError: 300,
     })
     const onSubmit: SubmitHandler<SignUp> = async (data) => {
-        setLoading(true)
-        await handleRegister(data.email, data.password, data.userName)
-        setLoading(false)
+        try {
+            setLoading(true)
+            await handleRegister(data.email, data.password, data.userName)
+        } catch (err: any) {
+            Alert.alert('Error register', `${(err as Error).message}`, [
+                { text: 'Sign In', onPress: () => router.back() },
+                { text: 'Cancel', onPress: () => {} },
+            ])
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (

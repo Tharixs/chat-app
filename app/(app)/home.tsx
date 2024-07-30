@@ -1,8 +1,8 @@
 import ChatList from '@/components/home/ChatList'
 import { useAuthContext } from '@/context/authContext'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
-import React, { useEffect } from 'react'
-import { StatusBar, View } from 'react-native'
+import React, { useCallback, useEffect } from 'react'
+import { Alert, StatusBar, View } from 'react-native'
 
 export default function Home() {
     const { fetchAllUsers } = useAuthContext()
@@ -11,20 +11,27 @@ export default function Home() {
     >([])
     const [loading, setLoading] = React.useState<boolean>(false)
 
-    useEffect(() => {
-        const loadAllUsers = async () => {
-            setLoading(true)
+    const loadAllUsers = useCallback(async () => {
+        setLoading(true)
+        try {
             const usersData = await fetchAllUsers()
             setUsers(usersData)
+        } catch (error) {
+            console.log((error as Error).message)
+            Alert.alert('Error fetching users', (error as Error).message)
+        } finally {
             setLoading(false)
         }
-        loadAllUsers()
     }, [fetchAllUsers])
+
+    useEffect(() => {
+        loadAllUsers()
+    }, [loadAllUsers])
 
     return (
         <View className="flex-1 bg-white">
             <StatusBar barStyle={'dark-content'} />
-            <ChatList users={users} refetch={fetchAllUsers} loading={loading} />
+            <ChatList users={users} refetch={loadAllUsers} loading={loading} />
         </View>
     )
 }

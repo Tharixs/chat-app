@@ -16,7 +16,7 @@ export default function ChatList({
         <View className="flex-1">
             <FlatList
                 data={users}
-                contentContainerStyle={{ flex: 1, paddingVertical: 25 }}
+                contentContainerStyle={{ paddingVertical: 25 }}
                 keyExtractor={(_, index) => index.toString()}
                 showsVerticalScrollIndicator={false}
                 refreshControl={
