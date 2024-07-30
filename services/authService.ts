@@ -19,7 +19,6 @@ export const register = async (
     email: string,
     password: string,
     userName: string,
-    imageUrl?: string
 ) => {
     try {
         const res = await auth().createUserWithEmailAndPassword(email, password)
@@ -27,7 +26,6 @@ export const register = async (
             id: res.user?.uid,
             name: userName,
             email: email,
-            imageUrl: imageUrl,
             createdAt: firestore.FieldValue.serverTimestamp(),
         })
     } catch (error) {

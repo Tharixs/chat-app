@@ -55,11 +55,10 @@ export const useAuth = () => {
     const handleRegister = async (
         email: string,
         password: string,
-        userName: string,
-        imageUrl?: string
+        userName: string
     ) => {
         try {
-            await register(email, password, userName, imageUrl)
+            await register(email, password, userName)
         } catch (error) {
             console.log(error)
             throw new Error('Error register')

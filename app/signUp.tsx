@@ -24,12 +24,7 @@ export default function SignUp() {
     })
     const onSubmit: SubmitHandler<SignUp> = async (data) => {
         setLoading(true)
-        await handleRegister(
-            data.email,
-            data.password,
-            data.userName,
-            data.imageUrl
-        )
+        await handleRegister(data.email, data.password, data.userName)
         setLoading(false)
     }
 
