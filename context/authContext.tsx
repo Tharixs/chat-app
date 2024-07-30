@@ -1,6 +1,7 @@
 import React, { ReactNode, createContext, useContext } from 'react'
 
 import { useAuth } from '@/hooks/useAuth'
+import ImagePicker from 'expo-image-picker'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
 
 type AuthContextProps = {
@@ -17,7 +18,7 @@ type AuthContextProps = {
     handleUpdateUserProfile: (
         id: string,
         name?: string,
-        imageUrl?: string
+        imageUrl?: ImagePicker.ImagePickerAsset
     ) => Promise<void>
     fetchAllUsers: () => Promise<FirebaseFirestoreTypes.DocumentData[]>
     refetchUser: () => Promise<void>

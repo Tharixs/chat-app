@@ -12,19 +12,24 @@ import { Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import { signUpSchema } from '@/schemas/auth/signUp.schema'
 import { AvoidingKeyboard } from '@/components/AvoidingKeyboard'
-import { useAuth } from '@/context/authContext'
+import { useAuthContext } from '@/context/authContext'
 import Button from '@/components/Button'
 
 export default function SignUp() {
     const [loading, setLoading] = useState(false)
-    const { register } = useAuth()
+    const { handleRegister } = useAuthContext()
     const { control, formState, handleSubmit, getValues } = useForm({
         resolver: yupResolver(signUpSchema),
         delayError: 300,
     })
     const onSubmit: SubmitHandler<SignUp> = async (data) => {
         setLoading(true)
-        await register(data.email, data.password, data.userName, data.imageUrl)
+        await handleRegister(
+            data.email,
+            data.password,
+            data.userName,
+            data.imageUrl
+        )
         setLoading(false)
     }
 
@@ -81,22 +86,6 @@ export default function SignUp() {
                         placeholder="Email Address"
                         errorMessage={String(
                             formState.errors.email?.message ?? ''
-                        )}
-                    />
-                    <TextInput
-                        icon={
-                            <Ionicons
-                                name="image-outline"
-                                size={hp(3.5)}
-                                color={'rgb(115 115 115)'}
-                                style={{ marginRight: wp(2) }}
-                            />
-                        }
-                        control={control}
-                        name="imageUrl"
-                        placeholder="Profile Image Url"
-                        errorMessage={String(
-                            formState.errors.imageUrl?.message ?? ''
                         )}
                     />
                     <TextInput

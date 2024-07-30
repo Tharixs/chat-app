@@ -1,4 +1,6 @@
 import firestore from '@react-native-firebase/firestore'
+import { FirebaseStorageTypes } from '@react-native-firebase/storage'
+import * as ImagePicker from 'expo-image-picker'
 
 export const updateDataUser = async (userId: string) => {
     try {
@@ -22,9 +24,7 @@ export const updateUserProfile = async (data: Partial<User>) => {
                 ...(data.name && { name: data.name }),
                 ...(data.imageUrl && { imageUrl: data.imageUrl }),
             })
-            .then(() => {
-                updateDataUser(data?.id!)
-            })
+        updateDataUser(data?.id!)
     } catch (error) {
         console.error('error update user', error)
         throw new Error('Error updating user')
@@ -56,5 +56,25 @@ export const getUserById = async (userId: string) => {
     } catch (error) {
         console.error('error fetch users', error)
         throw new Error('Error fetching users')
+    }
+}
+
+export const uploadImage = async (
+    uri: ImagePicker.ImagePickerAsset,
+    storageRef: FirebaseStorageTypes.Reference
+) => {
+    const snapshot = storageRef.putFile(uri.uri)
+    snapshot.on('state_changed', (taskSnapshot) => {
+        console.log(
+            `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`
+        )
+    })
+    try {
+        await snapshot
+        const imageUrl = await storageRef.getDownloadURL()
+        return imageUrl
+    } catch (error) {
+        console.error('error upload image', error)
+        throw new Error(`Error uploading image ${error}`)
     }
 }

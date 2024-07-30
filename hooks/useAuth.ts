@@ -3,9 +3,12 @@ import {
     getAllUsers,
     updateDataUser,
     updateUserProfile,
+    uploadImage,
 } from '@/services/userService'
 import auth from '@react-native-firebase/auth'
 import { useCallback, useEffect, useState } from 'react'
+import * as ImagePicker from 'expo-image-picker'
+import storage from '@react-native-firebase/storage'
 
 export const useAuth = () => {
     const [user, setUser] = useState<User | null>(null)
@@ -65,10 +68,19 @@ export const useAuth = () => {
     const handleUpdateUserProfile = async (
         id: string,
         name?: string,
-        imageUrl?: string
+        imageUrl?: ImagePicker.ImagePickerAsset
     ) => {
         try {
-            await updateUserProfile({ id, name, imageUrl })
+            if (imageUrl) {
+                const fileName = 'image-user-profile.jpg'
+                const storageRefImage = storage().ref(
+                    `images/profile/${id}/${fileName}`
+                )
+                const resUpImage = await uploadImage(imageUrl, storageRefImage)
+                await updateUserProfile({ id, name, imageUrl: resUpImage })
+            } else {
+                await updateUserProfile({ id, name })
+            }
         } catch (error) {
             console.log(error)
             throw new Error('Error update user profile')

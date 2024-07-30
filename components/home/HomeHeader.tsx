@@ -38,8 +38,8 @@ const HomeHeader = () => {
                                 borderRadius: 100,
                             }}
                             source={
-                                userData?.imageUrl ||
-                                'https://i.pravatar.cc/300'
+                                userData?.imageUrl ??
+                                require('@/assets/images/avatar.png')
                             }
                             contentFit="cover"
                             transition={800}

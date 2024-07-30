@@ -35,3 +35,4 @@ export const register = async (
         throw new Error('Error registering user')
     }
 }
+

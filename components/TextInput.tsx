@@ -17,7 +17,7 @@ const TextInput: React.FC<
     const { field } = useController({
         name: props.name ?? '',
         control: props.control,
-        defaultValue: '',
+        defaultValue: props?.value ?? '',
     })
 
     return (
@@ -45,7 +45,8 @@ const TextInput: React.FC<
                     className={`flex-1 font-semibold ${editable ? 'text-neutral-700' : 'text-neutral-400'}`}
                     placeholderTextColor={'grey'}
                     onChangeText={field?.onChange}
-                    value={field?.value || props.value}
+                    editable={editable}
+                    value={field?.value}
                 />
                 <TouchableOpacity>
                     {positionIcon === 'right' && props.icon && props.icon}

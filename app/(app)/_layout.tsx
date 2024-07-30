@@ -36,7 +36,10 @@ export default function _layout() {
                                 onPress={() => router.back()}
                             />
                             <Image
-                                source={userData?.imageUrl ?? ''}
+                                source={
+                                    userData?.imageUrl ||
+                                    require('@/assets/images/avatar.png')
+                                }
                                 style={{
                                     height: hp(4.5),
                                     aspectRatio: 1,

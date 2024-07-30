@@ -3,8 +3,6 @@ import { router } from 'expo-router'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
-
-import { User } from '@/interfaces/user/user.interfaces'
 import { blurHash } from '@/utils/common'
 import throttle from '@/utils/throttle'
 
@@ -29,7 +27,7 @@ export default function ChatItem({
         >
             <Image
                 style={{ height: hp(6), width: hp(6), borderRadius: 100 }}
-                source={item.imageUrl || 'https://i.pravatar.cc/1'}
+                source={item.imageUrl || require('@/assets/images/avatar.png')}
                 placeholder={blurHash}
                 transition={800}
             />

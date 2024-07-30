@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native'
+import { Platform, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { Image } from 'expo-image'
 import { useAuthContext } from '@/context/authContext'
@@ -16,32 +16,33 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { userUpdateProfileSchema } from '@/schemas/user/userUpdateProfile.schema'
 import { router } from 'expo-router'
 import throttle from '@/utils/throttle'
+import { useImagePicker } from '@/hooks/useImagePicker'
+import { useUpdateApp } from '@/hooks/useUpdateApp.hook'
+import { AntDesign } from '@expo/vector-icons'
+import {
+    Menu,
+    MenuTrigger,
+    MenuOptions,
+    MenuOption,
+} from 'react-native-popup-menu'
 
 export default function Profile() {
     const { user, handleUpdateUserProfile, refetchUser } = useAuthContext()
     const userData: User = user as unknown as User
+    const { pickImage, imageRes, image } = useImagePicker()
+    const { showButtonUpdate } = useUpdateApp()
     const { control, handleSubmit, getValues } = useForm({
         resolver: yupResolver(userUpdateProfileSchema),
     })
-    const { isUpdateAvailable, isUpdatePending } = Updates.useUpdates()
-
-    useEffect(() => {
-        if (isUpdatePending) {
-            Updates.reloadAsync()
-        }
-    }, [isUpdatePending])
-
-    const showButtonUpdate = isUpdateAvailable
     const handleUpdateProfile: SubmitHandler<Partial<User>> = throttle(
         async (data: Partial<User>) => {
-            await handleUpdateUserProfile(
-                userData.id,
-                data.name,
-                data.imageUrl
-            ).then(async () => {
+            try {
+                await handleUpdateUserProfile(userData.id, data.name, imageRes)
                 await refetchUser()
                 router.replace('home')
-            })
+            } catch (error) {
+                console.error('error update user profile', error)
+            }
         },
         1000
     )
@@ -55,7 +56,7 @@ export default function Profile() {
                 }}
                 className="gap-4"
             >
-                <View className="items-center">
+                <TouchableOpacity className="items-center" onPress={pickImage}>
                     <Image
                         style={{
                             height: hp(20),
@@ -63,13 +64,15 @@ export default function Profile() {
                             borderRadius: 100,
                         }}
                         source={
-                            userData.imageUrl || 'https://i.pravatar.cc/300'
+                            (image || userData.imageUrl) ??
+                            require('@/assets/images/avatar.png')
                         }
                         contentFit="cover"
                         transition={800}
                         placeholder={blurHash}
+                        children
                     />
-                </View>
+                </TouchableOpacity>
                 <View style={{ marginTop: hp(4) }} className="gap-4">
                     <TextInput
                         control={control}

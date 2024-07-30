@@ -1,5 +1,5 @@
-import { FlatList, Keyboard, RefreshControl, Text, View } from 'react-native'
-import React, { useRef } from 'react'
+import { FlatList, RefreshControl, Text, View } from 'react-native'
+import React from 'react'
 import { ChatMessageItem } from './ChatMessageItem'
 import { useAuthContext } from '@/context/authContext'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
@@ -16,6 +16,7 @@ export const ChatMessageList: React.FC<{
     return (
         <FlatList
             scrollEventThrottle={16}
+            contentContainerClassName={`${props.messages.length === 0 && 'flex-1'}`}
             inverted
             data={props.messages}
             refreshControl={
@@ -29,20 +30,18 @@ export const ChatMessageList: React.FC<{
             contentContainerStyle={{ marginBottom: 16 }}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={() => (
-                <>
-                    <View className="flex-1 justify-center align-center">
-                        {props.loading ? (
-                            <Loading size={hp(5)} />
-                        ) : (
-                            <Text
-                                style={{ fontSize: hp(2) }}
-                                className="text-center font-medium text-neutral-800"
-                            >
-                                No messages
-                            </Text>
-                        )}
-                    </View>
-                </>
+                <View className="flex-1 justify-center align-center rotate-180">
+                    {props.loading ? (
+                        <Loading size={hp(5)} />
+                    ) : (
+                        <Text
+                            style={{ fontSize: hp(2) }}
+                            className="text-center font-medium text-neutral-400"
+                        >
+                            No messages yet
+                        </Text>
+                    )}
+                </View>
             )}
             renderItem={({ item }) => (
                 <ChatMessageItem

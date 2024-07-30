@@ -24,9 +24,11 @@ export default function SignIn() {
     })
     const onSubmit: SubmitHandler<SignIn> = async (data) => {
         setLoading(true)
-        await handleLogin(data.email, data.password).then(() =>
+        try {
+            await handleLogin(data.email, data.password)
+        } finally {
             setLoading(false)
-        )
+        }
     }
 
     return (
