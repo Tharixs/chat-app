@@ -1,4 +1,5 @@
 import {
+    Alert,
     FlatList,
     KeyboardAvoidingView,
     TouchableOpacity,
@@ -12,14 +13,15 @@ import { Feather } from '@expo/vector-icons'
 import { useGlobalSearchParams } from 'expo-router'
 import throttle from '@/utils/throttle'
 import { useAuthContext } from '@/context/authContext'
-import { useRoomChat } from '@/hooks/useRoomChat'
 import { ChatMessageList } from '@/components/chat/ChatMessageList'
+import { useRoomChatContext } from '@/context/roomChatContext'
 
 export default function Chat() {
     const user = useAuthContext().user
     const item = JSON.parse(useGlobalSearchParams()?.item as string)
     const { control, handleSubmit, getValues, reset } = useForm()
-    const { getAllMessages, sendMessage, messages, loading } = useRoomChat()
+    const { getAllMessages, sendMessage, messages, loading } =
+        useRoomChatContext()
     const ref = useRef<FlatList<any>>(null)
 
     useEffect(() => {
@@ -31,9 +33,13 @@ export default function Chat() {
     const handleSendMessage: SubmitHandler<{ message: string }> = throttle(
         async (data: { message: string }) => {
             if (!user || !item) return
-            await sendMessage(user?.id, item?.id, data.message).then(() => {
+            try {
+                await sendMessage(user?.id, item?.id, data.message)
                 reset()
-            })
+            } catch (error) {
+                console.error(error)
+                Alert.alert('Error message', `${(error as Error).message}`)
+            }
             setTimeout(() => {
                 ref.current?.scrollToEnd({ animated: true })
             }, 100)

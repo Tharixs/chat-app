@@ -1,6 +1,7 @@
 import { login, logout, register } from '@/services/authService'
 import {
     getAllUsers,
+    getUserById,
     updateDataUser,
     updateUserProfile,
     uploadImage,
@@ -111,6 +112,16 @@ export const useAuth = () => {
         }
     }, [])
 
+    const handleGetUserById = useCallback(async (userId: string) => {
+        try {
+            const user = await getUserById(userId)
+            return user
+        } catch (error) {
+            console.error('Error User', error)
+            throw error
+        }
+    }, [])
+
     return {
         user,
         isAuthenticated,
@@ -120,5 +131,6 @@ export const useAuth = () => {
         handleUpdateUserProfile,
         fetchAllUsers,
         refetchUser,
+        handleGetUserById,
     }
 }

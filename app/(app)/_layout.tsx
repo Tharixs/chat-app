@@ -1,5 +1,5 @@
+import ChatHeader from '@/components/chat/ChatHeader'
 import HomeHeader from '@/components/home/HomeHeader'
-import { User } from '@/interfaces/user/user.interfaces'
 import { blurHash } from '@/utils/common'
 import { Feather } from '@expo/vector-icons'
 import { Image } from 'expo-image'
@@ -15,6 +15,11 @@ export default function _layout() {
         [item]
     )
 
+    const imageEncode = useMemo(() => {
+        if (!userData) return
+        return encodeURI(userData?.imageUrl)
+    }, [userData])
+
     return (
         <Stack>
             <Stack.Screen
@@ -27,35 +32,7 @@ export default function _layout() {
                     headerTitle: '',
                     animation: 'slide_from_right',
                     headerShadowVisible: true,
-                    headerLeft: () => (
-                        <View className="flex-row items-center gap-4">
-                            <Feather
-                                name="arrow-left"
-                                size={24}
-                                color="black"
-                                onPress={() => router.back()}
-                            />
-                            <Image
-                                source={
-                                    userData?.imageUrl ||
-                                    require('@/assets/images/avatar.png')
-                                }
-                                style={{
-                                    height: hp(4.5),
-                                    aspectRatio: 1,
-                                    borderRadius: 100,
-                                }}
-                                placeholder={blurHash}
-                                contentFit="cover"
-                            />
-                            <Text
-                                style={{ fontSize: hp(2) }}
-                                className="font-semibold text-neutral-800"
-                            >
-                                {userData?.name ?? ''}
-                            </Text>
-                        </View>
-                    ),
+                    headerLeft: () => <ChatHeader />,
                     headerRight: () => (
                         <View className="flex-row items-center gap-4">
                             <TouchableOpacity>

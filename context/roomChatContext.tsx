@@ -5,12 +5,11 @@ import {
     sendMessage,
 } from '@/services/roomChatService'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import { Alert } from 'react-native'
 
 type RoomChatContextType = {
     messages: FirebaseFirestoreTypes.DocumentData[]
-    lastMessages: FirebaseFirestoreTypes.DocumentData | null
     loading: {
         createRoomChat: boolean
         sendMessage: boolean
@@ -29,7 +28,7 @@ type RoomChatContextType = {
     getLastMessage: (
         userSenderId: string,
         userReceiverId: string
-    ) => Promise<void>
+    ) => FirebaseFirestoreTypes.Query<FirebaseFirestoreTypes.DocumentData>
 }
 
 const RoomChatContext = React.createContext<RoomChatContextType | null>(null)
@@ -72,7 +71,7 @@ export const RoomChatProvider: React.FC<React.PropsWithChildren> = ({
         try {
             await sendMessage(userSenderId, userReceiverId, message)
         } catch (error: any) {
-            Alert.alert('Error sending message', error.message)
+            throw error
         } finally {
             setLoading((prev) => ({ ...prev, sendMessage: false }))
         }
@@ -108,4 +107,10 @@ export const RoomChatProvider: React.FC<React.PropsWithChildren> = ({
     )
 }
 
-export default RoomChatContext
+export const useRoomChatContext = () => {
+    const value = useContext(RoomChatContext)
+    if (!value) {
+        throw new Error('useRoomChat must be used within an RoomChatProvider')
+    }
+    return value
+}

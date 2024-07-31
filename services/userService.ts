@@ -50,11 +50,11 @@ export const getUserById = async (userId: string) => {
             .collection('users')
             .where('id', '==', userId)
             .get()
-        const users = querySnapshot.docs.map((doc) => doc.data())
-        return users
+        const user = querySnapshot.docs.map((doc) => doc.data())
+        return user[0]
     } catch (error) {
-        console.error('error fetch users', error)
-        throw new Error('Error fetching users')
+        console.error('Error User', error)
+        throw new Error('Error getting users')
     }
 }
 

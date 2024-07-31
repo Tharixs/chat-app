@@ -60,7 +60,7 @@ export const getAllMessages = (
     })
 }
 
-export const getLastMessage = async (
+export const getLastMessage = (
     userSenderId: string,
     userReceiverId: string
 ) => {
@@ -71,12 +71,5 @@ export const getLastMessage = async (
         .collection('messages')
         .orderBy('createdAt', 'desc')
         .limit(1)
-    try {
-        const snapshot = await messageRef.get()
-        const messages = snapshot.docs.map((doc) => doc.data())
-        return messages[0] || null
-    } catch (error) {
-        console.error('Error fetching last message: ', error)
-        return null
-    }
+    return messageRef
 }

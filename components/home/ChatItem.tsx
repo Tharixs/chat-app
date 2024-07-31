@@ -1,12 +1,13 @@
 import { Image } from 'expo-image'
 import { router } from 'expo-router'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { blurHash } from '@/utils/common'
 import throttle from '@/utils/throttle'
 import auth from '@react-native-firebase/auth'
-import { useRoomChat } from '@/hooks/useRoomChat'
+import { useRoomChatContext } from '@/context/roomChatContext'
+import { useChatHook } from '@/hooks/useChat'
 export default function ChatItem({
     item,
     noBorder,
@@ -14,6 +15,11 @@ export default function ChatItem({
     item: User
     noBorder: boolean
 }) {
+    const { getLastMessage } = useRoomChatContext()
+    const [lastMessagesData, setLastMessageData] = useState<any>()
+    const { handleDisplayLastDateTime } = useChatHook()
+    const userId = auth()?.currentUser?.uid
+
     const handleChatPress = throttle(() => {
         router.push({
             pathname: '/chat',
@@ -21,19 +27,18 @@ export default function ChatItem({
         })
     }, 1000)
 
-    const { getLastMessage, lastMessages } = useRoomChat()
-    const [lastMessagesData, setLastMessageData] = useState<any>()
-    const userId = auth()?.currentUser?.uid
     useEffect(() => {
         if (!userId || !item) return
-        const fetchLastMessage = async () => {
-            const message = await getLastMessage(userId, item.id)
-            setLastMessageData(message)
-        }
-        fetchLastMessage()
+        const unsubscribe = getLastMessage(userId, item?.id).onSnapshot(
+            (querySnapshot) => {
+                const lastMessage = querySnapshot.docs[0].data()
+                setLastMessageData(lastMessage)
+            }
+        )
+        return unsubscribe
     }, [getLastMessage, item, userId])
 
-    const handleLastMessage = () => {
+    const handleDisplayLastMessage = () => {
         if (typeof lastMessagesData === 'undefined') return 'loading...'
         if (lastMessagesData) {
             if (userId === lastMessagesData?.userId)
@@ -67,17 +72,16 @@ export default function ChatItem({
                         style={{ fontSize: hp(1.6) }}
                         className="font-medium text-neutral-500"
                     >
-                        {new Date(
-                            (lastMessages?.createdAt as User['createdAt'])
-                                ?.seconds * 1000
-                        ).toLocaleString()}
+                        {handleDisplayLastDateTime(
+                            new Date(lastMessagesData?.createdAt * 1000)
+                        )}
                     </Text>
                 </View>
                 <Text
                     style={{ fontSize: hp(1.8) }}
                     className="font-medium text-neutral-500"
                 >
-                    {handleLastMessage()}
+                    {handleDisplayLastMessage()}
                 </Text>
             </View>
         </TouchableOpacity>
