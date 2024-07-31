@@ -1,5 +1,5 @@
 import { FlatList, RefreshControl, Text, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { ChatMessageItem } from './ChatMessageItem'
 import { useAuthContext } from '@/context/authContext'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'

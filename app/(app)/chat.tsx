@@ -1,6 +1,5 @@
 import {
     FlatList,
-    Keyboard,
     KeyboardAvoidingView,
     TouchableOpacity,
     View,

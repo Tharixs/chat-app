@@ -8,7 +8,6 @@ export const updateDataUser = async (userId: string) => {
         if (users.exists) {
             return users.data()
         }
-        throw new Error('User not found')
     } catch (error) {
         console.error('error fetch users', error)
         throw new Error('Error fetching users')

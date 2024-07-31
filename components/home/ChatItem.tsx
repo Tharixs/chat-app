@@ -1,11 +1,12 @@
 import { Image } from 'expo-image'
 import { router } from 'expo-router'
-import React from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { blurHash } from '@/utils/common'
 import throttle from '@/utils/throttle'
-
+import auth from '@react-native-firebase/auth'
+import { useRoomChat } from '@/hooks/useRoomChat'
 export default function ChatItem({
     item,
     noBorder,
@@ -19,6 +20,29 @@ export default function ChatItem({
             params: { item: JSON.stringify(item ?? '{}') as any },
         })
     }, 1000)
+
+    const { getLastMessage, lastMessages } = useRoomChat()
+    const [lastMessagesData, setLastMessageData] = useState<any>()
+    const userId = auth()?.currentUser?.uid
+    useEffect(() => {
+        if (!userId || !item) return
+        const fetchLastMessage = async () => {
+            const message = await getLastMessage(userId, item.id)
+            setLastMessageData(message)
+        }
+        fetchLastMessage()
+    }, [getLastMessage, item, userId])
+
+    const handleLastMessage = () => {
+        if (typeof lastMessagesData === 'undefined') return 'loading...'
+        if (lastMessagesData) {
+            if (userId === lastMessagesData?.userId)
+                return 'You : ' + lastMessagesData?.text
+            return lastMessagesData?.text
+        } else {
+            return 'Say Hayy :)'
+        }
+    }
 
     return (
         <TouchableOpacity
@@ -43,14 +67,17 @@ export default function ChatItem({
                         style={{ fontSize: hp(1.6) }}
                         className="font-medium text-neutral-500"
                     >
-                        Time
+                        {new Date(
+                            (lastMessages?.createdAt as User['createdAt'])
+                                ?.seconds * 1000
+                        ).toLocaleString()}
                     </Text>
                 </View>
                 <Text
                     style={{ fontSize: hp(1.8) }}
                     className="font-medium text-neutral-500"
                 >
-                    Last Message
+                    {handleLastMessage()}
                 </Text>
             </View>
         </TouchableOpacity>

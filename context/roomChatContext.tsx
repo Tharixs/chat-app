@@ -1,6 +1,7 @@
 import {
     createRoomChatIfNotExists,
     getAllMessages,
+    getLastMessage,
     sendMessage,
 } from '@/services/roomChatService'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
@@ -9,6 +10,7 @@ import { Alert } from 'react-native'
 
 type RoomChatContextType = {
     messages: FirebaseFirestoreTypes.DocumentData[]
+    lastMessages: FirebaseFirestoreTypes.DocumentData | null
     loading: {
         createRoomChat: boolean
         sendMessage: boolean
@@ -24,6 +26,10 @@ type RoomChatContextType = {
         message: string
     ) => Promise<void>
     getAllMessages: (userSenderId: string, userReceiverId: string) => void
+    getLastMessage: (
+        userSenderId: string,
+        userReceiverId: string
+    ) => Promise<void>
 }
 
 const RoomChatContext = React.createContext<RoomChatContextType | null>(null)
@@ -79,6 +85,13 @@ export const RoomChatProvider: React.FC<React.PropsWithChildren> = ({
         []
     )
 
+    const handleGetLastMessages = useCallback(
+        (userSenderId: string, userReceiverId: string) => {
+            return getLastMessage(userSenderId, userReceiverId)
+        },
+        []
+    )
+
     return (
         <RoomChatContext.Provider
             value={{
@@ -87,6 +100,7 @@ export const RoomChatProvider: React.FC<React.PropsWithChildren> = ({
                 createRoomChatIfNotExists: handleCreateRoomChat,
                 sendMessage: handleSendMessage,
                 getAllMessages: handleGetAllMessages,
+                getLastMessage: handleGetLastMessages,
             }}
         >
             {children}

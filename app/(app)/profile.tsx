@@ -1,5 +1,5 @@
-import { Platform, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect } from 'react'
+import { Text, TouchableOpacity, View } from 'react-native'
+import React from 'react'
 import { Image } from 'expo-image'
 import { useAuthContext } from '@/context/authContext'
 import {
@@ -18,13 +18,6 @@ import { router } from 'expo-router'
 import throttle from '@/utils/throttle'
 import { useImagePicker } from '@/hooks/useImagePicker'
 import { useUpdateApp } from '@/hooks/useUpdateApp.hook'
-import { AntDesign } from '@expo/vector-icons'
-import {
-    Menu,
-    MenuTrigger,
-    MenuOptions,
-    MenuOption,
-} from 'react-native-popup-menu'
 
 export default function Profile() {
     const { user, handleUpdateUserProfile, refetchUser } = useAuthContext()
