@@ -7,6 +7,7 @@ import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
 import { Image } from 'expo-image'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { blurHash } from '@/utils/common'
+import ImageModal from 'react-native-image-modal'
 
 export default function ChatHeader() {
     const { item } = useGlobalSearchParams()
@@ -40,7 +41,7 @@ export default function ChatHeader() {
                 color="black"
                 onPress={() => router.back()}
             />
-            <Image
+            <ImageModal
                 source={
                     userData?.imageUrl ?? require('@/assets/images/avatar.png')
                 }
@@ -50,9 +51,16 @@ export default function ChatHeader() {
                     aspectRatio: 1,
                     width: hp(4.5),
                 }}
-                placeholder={blurHash}
-                contentFit="cover"
+                renderImageComponent={({ source, style }) => (
+                    <Image
+                        source={source}
+                        style={style}
+                        placeholder={blurHash}
+                        contentFit="cover"
+                    />
+                )}
             />
+
             <Text
                 style={{ fontSize: hp(2) }}
                 className="font-semibold text-neutral-800"

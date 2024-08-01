@@ -73,7 +73,9 @@ export default function ChatItem({
                         className="font-medium text-neutral-500"
                     >
                         {handleDisplayLastDateTime(
-                            new Date(lastMessagesData?.createdAt * 1000)
+                            new Date(
+                                lastMessagesData?.createdAt?.seconds * 1000
+                            )
                         )}
                     </Text>
                 </View>

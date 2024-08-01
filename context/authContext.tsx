@@ -24,7 +24,7 @@ type AuthContextProps = {
     refetchUser: () => Promise<void>
     handleGetUserById: (
         userId: string
-    ) => Promise<FirebaseFirestoreTypes.DocumentData[]>
+    ) => Promise<FirebaseFirestoreTypes.DocumentData>
 }
 const AuthContext = createContext<AuthContextProps | undefined>(undefined)
 
