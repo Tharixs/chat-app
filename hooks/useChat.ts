@@ -4,9 +4,9 @@ export const useChatHook = () => {
     const handleDisplayLastDateTime = (date: Date) => {
         if (typeof date === 'undefined') return 'loading...'
         if (date.getDate() === new Date().getDate()) {
-            return timeFormater(date.toTimeString())
+            return timeFormater(date)
         } else {
-            return dateFormater(date.toDateString())
+            return dateFormater(String(date))
         }
     }
 
