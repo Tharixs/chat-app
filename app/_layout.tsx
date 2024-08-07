@@ -5,19 +5,22 @@ import React, { useEffect } from 'react'
 
 import '../global.css'
 import { RoomChatProvider } from '@/context/roomChatContext'
+import { storage } from '@/services/localStorageService'
 const MainLayout = () => {
-    const { isAuthenticated } = useAuthContext()
     const segments = useSegments()
+    const { isAuthenticated } = useAuthContext()
+    const authenticated =
+        isAuthenticated || storage.getBoolean('isAuthenticated')
 
     useEffect(() => {
         const inApp = segments[0] === '(app)'
         if (segments[0] === undefined) router.replace('signIn')
-        if (isAuthenticated && !inApp) {
+        if (authenticated && !inApp) {
             router.replace('home')
-        } else if (!isAuthenticated && inApp) {
+        } else if (!authenticated && inApp) {
             router.replace('signIn')
         }
-    }, [isAuthenticated, segments])
+    }, [authenticated, segments])
 
     return <Slot />
 }

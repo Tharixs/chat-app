@@ -9,7 +9,7 @@ export const dateFormater = (date: string) => {
         'Jun',
         'Jul',
         'Aug',
-        'Sept',
+        'Sep',
         'Oct',
         'Nov',
         'Dec',

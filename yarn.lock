@@ -8405,6 +8405,11 @@ react-native-image-modal@^3.0.7:
   resolved "https://registry.yarnpkg.com/react-native-image-modal/-/react-native-image-modal-3.0.7.tgz#39c17747fba1c608b97fb0234804f821dbb86f07"
   integrity sha512-Qg4b6PFL/XfS9pLraMpML1PWSNLFDuY7ZijHfYWvrwuh0bQODOFomeWC2Pnow/YCVGYK+4br8yWUEFKfufvcyg==
 
+react-native-mmkv@^2.12.2:
+  version "2.12.2"
+  resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-2.12.2.tgz#4bba0f5f04e2cf222494cce3a9794ba6a4894dee"
+  integrity sha512-6058Aq0p57chPrUutLGe9fYoiDVDNMU2PKV+lLFUJ3GhoHvUrLdsS1PDSCLr00yqzL4WJQ7TTzH+V8cpyrNcfg==
+
 react-native-popup-menu@^0.16.1:
   version "0.16.1"
   resolved "https://registry.yarnpkg.com/react-native-popup-menu/-/react-native-popup-menu-0.16.1.tgz#b1bb56be5c0838bbc2f532af7b1f554b7ceef566"
