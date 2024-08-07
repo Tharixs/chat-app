@@ -11,12 +11,12 @@ import { useCallback, useEffect, useState } from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import storage from '@react-native-firebase/storage'
 import { storage as mmkvStorage } from '@/services/localStorageService'
+import { useMMKVBoolean } from 'react-native-mmkv'
 
 export const useAuth = () => {
     const [user, setUser] = useState<User | null>(null)
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(
-        undefined
-    )
+    const [isAuthenticated, setIsAuthenticated] =
+        useMMKVBoolean('isAuthenticated')
     useEffect(() => {
         const unsubs = auth().onAuthStateChanged(async (user) => {
             if (user) {
@@ -33,12 +33,11 @@ export const useAuth = () => {
             }
         })
         return () => unsubs()
-    }, [])
+    }, [setIsAuthenticated])
 
     const handleLogin = async (email: string, password: string) => {
         try {
             await login(email, password)
-            mmkvStorage.set('isAuthenticated', true)
         } catch (error) {
             console.log(error)
             throw error
@@ -48,7 +47,6 @@ export const useAuth = () => {
     const handleLogout = async () => {
         try {
             await logout()
-            mmkvStorage.set('isAuthenticated', false)
         } catch (error) {
             console.log(error)
             throw new Error('Error logout')
