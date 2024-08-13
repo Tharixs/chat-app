@@ -10,7 +10,6 @@ import auth from '@react-native-firebase/auth'
 import { useCallback, useEffect, useState } from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import storage from '@react-native-firebase/storage'
-import { storage as mmkvStorage } from '@/services/localStorageService'
 import { useMMKVBoolean } from 'react-native-mmkv'
 
 export const useAuth = () => {

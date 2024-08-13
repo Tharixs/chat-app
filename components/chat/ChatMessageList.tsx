@@ -1,10 +1,10 @@
 import { FlatList, RefreshControl, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React from 'react'
 import { ChatMessageItem } from './ChatMessageItem'
 import { useAuthContext } from '@/context/authContext'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
-import Loading from '../Loading'
+import LotieAnimationIcon from '../LotieAnimationIcon'
 
 export const ChatMessageList: React.FC<{
     loading: boolean
@@ -32,7 +32,10 @@ export const ChatMessageList: React.FC<{
             ListEmptyComponent={() => (
                 <View className="flex-1 justify-center align-center rotate-180">
                     {props.loading ? (
-                        <Loading size={hp(5)} />
+                        <LotieAnimationIcon
+                            source={require('../../assets/images/loading.json')}
+                            size={hp(5)}
+                        />
                     ) : (
                         <Text
                             style={{ fontSize: hp(2) }}

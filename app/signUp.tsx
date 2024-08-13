@@ -1,16 +1,8 @@
-import Loading from '@/components/Loading'
 import TextInput from '@/components/TextInput'
 import React, { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import {
-    Alert,
-    Image,
-    Pressable,
-    Text,
-    TouchableOpacity,
-    View,
-} from 'react-native'
+import { Image, Pressable, Text, View } from 'react-native'
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -21,10 +13,18 @@ import { signUpSchema } from '@/schemas/auth/signUp.schema'
 import { AvoidingKeyboard } from '@/components/AvoidingKeyboard'
 import { useAuthContext } from '@/context/authContext'
 import Button from '@/components/Button'
+import LotieAnimationIcon from '@/components/LotieAnimationIcon'
+import { ModalStatus } from '@/components/modal/StatusModal'
 
 export default function SignUp() {
     const [loading, setLoading] = useState(false)
     const { handleRegister } = useAuthContext()
+    const [registerStatus, setRegisterStatus] = useState<{
+        success: boolean
+        error: boolean
+        message: string
+    }>({ success: false, error: false, message: '' })
+
     const { control, formState, handleSubmit, getValues } = useForm({
         resolver: yupResolver(signUpSchema),
         delayError: 300,
@@ -33,11 +33,13 @@ export default function SignUp() {
         try {
             setLoading(true)
             await handleRegister(data.email, data.password, data.userName)
+            setRegisterStatus({ success: true, error: false, message: '' })
         } catch (err: any) {
-            Alert.alert('Error register', `${(err as Error).message}`, [
-                { text: 'Sign In', onPress: () => router.back() },
-                { text: 'Cancel', onPress: () => {} },
-            ])
+            setRegisterStatus({
+                success: false,
+                error: true,
+                message: err.message,
+            })
         } finally {
             setLoading(false)
         }
@@ -45,6 +47,33 @@ export default function SignUp() {
 
     return (
         <AvoidingKeyboard className="flex-1 bg-white">
+            <ModalStatus
+                isVisible={registerStatus.error}
+                status="fail"
+                title="Register failed !"
+                message={registerStatus.message}
+                onClose={() =>
+                    setRegisterStatus({
+                        success: false,
+                        error: false,
+                        message: '',
+                    })
+                }
+            />
+
+            <ModalStatus
+                isVisible={registerStatus.success}
+                status="success"
+                title="Register Success !"
+                message={registerStatus.message}
+                onClose={() => {
+                    setRegisterStatus({
+                        success: false,
+                        error: false,
+                        message: '',
+                    })
+                }}
+            />
             <View
                 style={{ paddingTop: hp(8), paddingHorizontal: wp(5) }}
                 className="gap-12"
@@ -53,7 +82,7 @@ export default function SignUp() {
                     <Image
                         style={{ height: hp(20) }}
                         resizeMode="contain"
-                        source={require('../assets/images/register.png')}
+                        source={require('@/assets/images/register.png')}
                     />
                 </View>
                 <View className="gap-10">
@@ -120,7 +149,10 @@ export default function SignUp() {
                     <View>
                         {loading ? (
                             <View className="justify-center items-center">
-                                <Loading size={hp(15.5)} />
+                                <LotieAnimationIcon
+                                    source={require('@/assets/images/loading.json')}
+                                    size={hp(15.5)}
+                                />
                             </View>
                         ) : (
                             <Button

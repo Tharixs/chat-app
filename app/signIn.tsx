@@ -1,10 +1,9 @@
-import Loading from '@/components/Loading'
 import TextInput from '@/components/TextInput'
 import { signInSchema } from '@/schemas/auth/signIn.schema'
 import React, { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Alert, Image, Pressable, Text, View } from 'react-native'
+import { Image, Pressable, Text, View } from 'react-native'
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -14,10 +13,15 @@ import { router } from 'expo-router'
 import { AvoidingKeyboard } from '@/components/AvoidingKeyboard'
 import { useAuthContext } from '@/context/authContext'
 import Button from '@/components/Button'
+import LotieAnimationIcon from '@/components/LotieAnimationIcon'
+import { ModalStatus } from '@/components/modal/StatusModal'
 
 export default function SignIn() {
     const { handleLogin } = useAuthContext()
     const [loading, setLoading] = useState(false)
+    const [isLoginError, setIsLoginError] = useState(false)
+    const [isLoginSuccess, setIsLoginSuccess] = useState(false)
+    const [errorLogin, setErrorLogin] = useState('')
     const { control, formState, handleSubmit, getValues } = useForm({
         resolver: yupResolver(signInSchema),
         delayError: 300,
@@ -26,8 +30,13 @@ export default function SignIn() {
         setLoading(true)
         try {
             await handleLogin(data.email, data.password)
+            setIsLoginSuccess(true)
+            setIsLoginError(false)
         } catch (err) {
-            Alert.alert('Error login', `${(err as Error).message}`)
+            console.error('Error login', err)
+            setIsLoginError(true)
+            setIsLoginSuccess(false)
+            setErrorLogin((err as Error).message)
         } finally {
             setLoading(false)
         }
@@ -35,6 +44,13 @@ export default function SignIn() {
 
     return (
         <AvoidingKeyboard className="flex-1 bg-white gap-12">
+            <ModalStatus
+                isVisible={isLoginError}
+                status="fail"
+                title="Login failed !"
+                message={errorLogin}
+                onClose={() => setIsLoginError(false)}
+            />
             <View
                 style={{ paddingTop: hp(8), paddingHorizontal: wp(5) }}
                 className="gap-12"
@@ -43,7 +59,7 @@ export default function SignIn() {
                     <Image
                         style={{ height: hp(25) }}
                         resizeMode="contain"
-                        source={require('../assets/images/login.png')}
+                        source={require('@/assets/images/login.png')}
                     />
                 </View>
                 <View className="gap-10">
@@ -102,7 +118,10 @@ export default function SignIn() {
                     <View>
                         {loading ? (
                             <View className="justify-center items-center">
-                                <Loading size={hp(15.5)} />
+                                <LotieAnimationIcon
+                                    size={hp(15.5)}
+                                    source={require('../assets/images/loading.json')}
+                                />
                             </View>
                         ) : (
                             <Button

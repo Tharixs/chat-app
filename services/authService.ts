@@ -5,7 +5,10 @@ export const login = async (email: string, password: string) => {
     try {
         await auth().signInWithEmailAndPassword(email, password)
     } catch (error) {
-        console.error('error login', error)
+        console.error('error login', (error as Error).message)
+        if ((error as Error).message.includes('[auth/too-many-requests]')) {
+            throw new Error('Too many requests, please try again later !')
+        }
         throw new Error('Please input correct email and password or register !')
     }
 }

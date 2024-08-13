@@ -5,7 +5,7 @@
     "strict": true,
     "paths": {
       "@/*": [
-        "./*"
+        "./*", 
       ]
     }
   },
@@ -15,5 +15,5 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "metro.config.js"
-  ]
+, "ReactotronConfig.js"  ]
 }

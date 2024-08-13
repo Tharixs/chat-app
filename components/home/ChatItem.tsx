@@ -31,7 +31,7 @@ export default function ChatItem({
         if (!userId || !item) return
         const unsubscribe = getLastMessage(userId, item?.id).onSnapshot(
             (querySnapshot) => {
-                const lastMessage = querySnapshot.docs[0].data()
+                const lastMessage = querySnapshot.docs[0]?.data?.()
                 setLastMessageData(lastMessage)
             }
         )
@@ -39,7 +39,6 @@ export default function ChatItem({
     }, [getLastMessage, item, userId])
 
     const handleDisplayLastMessage = () => {
-        if (typeof lastMessagesData === 'undefined') return 'loading...'
         if (lastMessagesData) {
             if (userId === lastMessagesData?.userId)
                 return 'You : ' + lastMessagesData?.text
@@ -73,9 +72,10 @@ export default function ChatItem({
                         className="font-medium text-neutral-500"
                     >
                         {handleDisplayLastDateTime(
-                            new Date(
-                                lastMessagesData?.createdAt?.seconds * 1000
-                            )
+                            lastMessagesData?.createdAt?.seconds &&
+                                new Date(
+                                    lastMessagesData?.createdAt?.seconds * 1000
+                                )
                         )}
                     </Text>
                 </View>
