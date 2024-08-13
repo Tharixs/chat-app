@@ -22,3 +22,6 @@ expo-env.d.ts
 # android and ios folder
 android/
 ios/
+
+# build apk from eas local
+*.apk
