@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
-import React from 'react'
-import { useForm } from 'react-hook-form'
+import React, { useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { forgotPasswordSchema } from '@/schemas/auth/forgotPassword.schema'
 import { AvoidingKeyboard } from '@/components/AvoidingKeyboard'
@@ -12,14 +12,49 @@ import { Ionicons } from '@expo/vector-icons'
 import TextInput from '@/components/TextInput'
 import Button from '@/components/Button'
 import { Link, router } from 'expo-router'
+import { forgotPassword } from '@/services/authService'
+import { ModalStatus } from '@/components/modal/StatusModal'
 
 export default function ForgotPassword() {
-    const { control, formState, handleSubmit } = useForm({
+    const [error, setError] = useState<string | null>(null)
+    const [isError, setIsError] = useState(false)
+    const [isSucces, setIsSuccess] = useState(false)
+    const [success, setSuccess] = useState<string | null>(null)
+    const { control, formState, handleSubmit, getValues, reset } = useForm({
         resolver: yupResolver(forgotPasswordSchema),
         delayError: 300,
     })
+
+    const onSubmit: SubmitHandler<Partial<SignIn>> = async (data) => {
+        try {
+            forgotPassword(data.email!)
+            setIsError(false)
+            setIsSuccess(true)
+            setSuccess('Check your email to reset your password')
+            reset()
+        } catch (err) {
+            console.error('Error login', err)
+            setIsError(true)
+            setIsSuccess(false)
+            setError((err as Error).message)
+        }
+    }
     return (
         <AvoidingKeyboard className="flex-1 bg-white gap-12">
+            <ModalStatus
+                isVisible={isError}
+                status="fail"
+                title="Send email failed !"
+                message={error || 'Something went wrong'}
+                onClose={() => setIsError(false)}
+            />
+            <ModalStatus
+                isVisible={isSucces}
+                status="success"
+                title="Email sent successfully"
+                message={success || 'Check your email to reset your password'}
+                onClose={() => setIsSuccess(false)}
+            />
             <View
                 style={{
                     paddingHorizontal: wp(5),
@@ -41,7 +76,7 @@ export default function ForgotPassword() {
                         No need to worry. Enter your email and we will send you
                     </Text>
                 </View>
-                <View style={{ marginTop: hp(5) }} className="gap-8">
+                <View style={{ marginTop: hp(5) }} className="gap-4">
                     <TextInput
                         icon={
                             <Ionicons
@@ -58,11 +93,15 @@ export default function ForgotPassword() {
                             formState.errors.email?.message ?? ''
                         )}
                     />
-                    <View className="gap-4">
+                    <View className="gap-4 mt-4">
                         <Button
                             label="Reset Password"
                             mode="contained"
-                            onPress={handleSubmit(() => {})}
+                            onPress={() =>
+                                handleSubmit(() =>
+                                    onSubmit(getValues() as Partial<SignIn>)
+                                )()
+                            }
                         />
                         <Button
                             label="Back to Sign In"

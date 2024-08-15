@@ -39,3 +39,12 @@ export const register = async (
         throw new Error(error as any)
     }
 }
+
+export const forgotPassword = async (email: string) => {
+    try {
+        await auth().sendPasswordResetEmail(email)
+    } catch (error) {
+        console.error('error forgot password', error)
+        throw new Error(error as any)
+    }
+}
