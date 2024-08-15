@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Image } from 'expo-image'
 import { useAuthContext } from '@/context/authContext'
 import {
@@ -30,7 +30,11 @@ export default function Profile() {
     const handleUpdateProfile: SubmitHandler<Partial<User>> = throttle(
         async (data: Partial<User>) => {
             try {
-                await handleUpdateUserProfile(userData.id, data.name, imageRes)
+                await handleUpdateUserProfile(
+                    userData.id,
+                    data.userName,
+                    imageRes
+                )
                 await refetchUser()
                 router.replace('home')
             } catch (error) {
@@ -57,7 +61,7 @@ export default function Profile() {
                             borderRadius: 100,
                         }}
                         source={
-                            (image || userData.imageUrl) ??
+                            (image || userData?.imageUrl) ??
                             require('@/assets/images/avatar.png')
                         }
                         contentFit="cover"
@@ -71,16 +75,14 @@ export default function Profile() {
                         control={control}
                         name="email"
                         label="Email"
-                        value={userData.email}
-                        placeholder="Name"
+                        value={userData?.email}
                         editable={false}
                     />
                     <TextInput
                         label="User Name"
                         control={control}
-                        value={userData.name}
-                        name="name"
-                        placeholder="Name"
+                        value={userData?.userName}
+                        name="userName"
                     />
                 </View>
             </View>

@@ -17,7 +17,7 @@ type AuthContextProps = {
     ) => Promise<void>
     handleUpdateUserProfile: (
         id: string,
-        name?: string,
+        userName?: string,
         imageUrl?: ImagePicker.ImagePickerAsset
     ) => Promise<void>
     fetchAllUsers: () => Promise<FirebaseFirestoreTypes.DocumentData[]>

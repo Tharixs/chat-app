@@ -16,7 +16,7 @@ export const logout = async () => {
     try {
         await auth().signOut()
     } catch (error) {
-        console.error('error logout', error)
+        throw new Error(error as any)
     }
 }
 export const register = async (
@@ -29,13 +29,13 @@ export const register = async (
         if (res.additionalUserInfo?.isNewUser) {
             await firestore().collection('users').doc(res.user?.uid).set({
                 id: res.user?.uid,
-                name: userName,
+                userName: userName,
                 email: res?.user?.email,
                 createdAt: firestore.FieldValue.serverTimestamp(),
             })
         }
     } catch (error) {
         console.error('error register', error)
-        throw new Error('User already exists!')
+        throw new Error(error as any)
     }
 }

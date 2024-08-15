@@ -1,0 +1,30 @@
+
+Chat App Features 
+
+  - Auth
+    - login                               ( ✅️ )
+    - register                            ( ✅️ ) 
+    - logout                              ( ✅️ )
+    - forgot password                     ( ❌️ )
+  - Chat
+    - send realtime message               ( ✅️ )
+    - receive realtime message            ( ✅️ )
+    - list chat                           ( ✅️ )
+    - list chat only friends              ( ❌️ )
+    - add friends                         ( ❌️ )
+    - remove friends                      ( ❌️ )
+    - call                                ( ❌️ )
+    - video call                          ( ❌️ )
+    - send image on chat                  ( ❌️ )
+    - send voice note on chat             ( ❌️ )
+  - User
+    - update profile user                 ( ✅️ )
+    - update with image                   ( ✅️ )
+    - add friends                         ( ❌️ )
+    - remove friends                      ( ❌️ )
+  - Notifications
+    - receive notifications               ( ✅️ )
+    - send notifications to spesific user ( ❌️ )
+  - OTA ( Over-the-air update )           ( ✅️ ) 
+ 
+

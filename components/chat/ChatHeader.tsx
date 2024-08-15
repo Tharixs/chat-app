@@ -65,7 +65,7 @@ export default function ChatHeader() {
                 style={{ fontSize: hp(2) }}
                 className="font-semibold text-neutral-800"
             >
-                {userData?.name ?? ''}
+                {userData?.userName ?? ''}
             </Text>
         </View>
     )

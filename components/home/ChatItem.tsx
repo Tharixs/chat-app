@@ -65,7 +65,7 @@ export default function ChatItem({
                         style={{ fontSize: hp(1.8) }}
                         className="font-semibold text-neutral-800"
                     >
-                        {item.name}
+                        {item.userName}
                     </Text>
                     <Text
                         style={{ fontSize: hp(1.6) }}

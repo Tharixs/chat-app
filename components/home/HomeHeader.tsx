@@ -9,11 +9,14 @@ import { Menu, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
 import MenuItem from '../pop-up-menu/MenuItem'
 import { AntDesign, Feather } from '@expo/vector-icons'
 import { router } from 'expo-router'
+import { getFCMTokenByUserId, updateFCMToken } from '@/services/fcmService'
+import auth from '@react-native-firebase/auth'
 
 const ios = Platform.OS === 'ios'
 const HomeHeader = () => {
     const { top } = useSafeAreaInsets()
     const { user, handleLogout } = useAuthContext()
+
     const userData: User = user as unknown as User
     return (
         <View
@@ -68,7 +71,18 @@ const HomeHeader = () => {
                         />
                         <View className="border-b p-[1px] border-gray-300 mx-3" />
                         <MenuItem
-                            onClick={handleLogout}
+                            onClick={async () => {
+                                const data = await getFCMTokenByUserId(
+                                    userData?.id
+                                )
+                                await handleLogout()
+                                await updateFCMToken({
+                                    createdAt: data?.createdAt,
+                                    fcmToken: data?.fcmToken,
+                                    revoked: true,
+                                    userId: data?.userId,
+                                })
+                            }}
                             text="Sign out"
                             value={null}
                             icon={

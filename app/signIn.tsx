@@ -9,12 +9,16 @@ import {
     heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
 import { Ionicons } from '@expo/vector-icons'
-import { router } from 'expo-router'
+import { Link, router } from 'expo-router'
 import { AvoidingKeyboard } from '@/components/AvoidingKeyboard'
 import { useAuthContext } from '@/context/authContext'
 import Button from '@/components/Button'
 import LotieAnimationIcon from '@/components/LotieAnimationIcon'
 import { ModalStatus } from '@/components/modal/StatusModal'
+import { storeFCMToken } from '@/services/fcmService'
+import { useNotificationContext } from '@/context/notificationContext'
+
+import auth from '@react-native-firebase/auth'
 
 export default function SignIn() {
     const { handleLogin } = useAuthContext()
@@ -26,10 +30,12 @@ export default function SignIn() {
         resolver: yupResolver(signInSchema),
         delayError: 300,
     })
+    const { expoPushToken } = useNotificationContext()
     const onSubmit: SubmitHandler<SignIn> = async (data) => {
         setLoading(true)
         try {
             await handleLogin(data.email, data.password)
+            await storeFCMToken(expoPushToken, auth()?.currentUser?.uid!)
             setIsLoginSuccess(true)
             setIsLoginError(false)
         } catch (err) {
@@ -50,6 +56,13 @@ export default function SignIn() {
                 title="Login failed !"
                 message={errorLogin}
                 onClose={() => setIsLoginError(false)}
+            />
+            <ModalStatus
+                isVisible={isLoginSuccess}
+                status="success"
+                title="Login Success !"
+                message={'lets get started'}
+                onClose={() => setIsLoginSuccess(false)}
             />
             <View
                 style={{ paddingTop: hp(8), paddingHorizontal: wp(5) }}
@@ -107,12 +120,14 @@ export default function SignIn() {
                             )}
                         />
                     </View>
-                    <Text
-                        style={{ fontSize: hp(1.8) }}
-                        className="font-semibold text-right text-neutral-500"
-                    >
-                        Forgot Password?
-                    </Text>
+                    <Link href={'/forgotPassword'} asChild>
+                        <Text
+                            style={{ fontSize: hp(1.8) }}
+                            className="font-semibold text-right text-neutral-500"
+                        >
+                            Forgot Password?
+                        </Text>
+                    </Link>
                 </View>
                 <View className="gap-4">
                     <View>

@@ -1,25 +1,12 @@
 import ChatHeader from '@/components/chat/ChatHeader'
 import HomeHeader from '@/components/home/HomeHeader'
-import { blurHash } from '@/utils/common'
 import { Feather } from '@expo/vector-icons'
-import { Image } from 'expo-image'
-import { router, Stack, useGlobalSearchParams } from 'expo-router'
-import React, { useMemo } from 'react'
+import { router, Stack } from 'expo-router'
+import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
 export default function _layout() {
-    const { item } = useGlobalSearchParams()
-    const userData: User = useMemo(
-        () => item && JSON.parse(item as string),
-        [item]
-    )
-
-    const imageEncode = useMemo(() => {
-        if (!userData) return
-        return encodeURI(userData?.imageUrl)
-    }, [userData])
-
     return (
         <Stack>
             <Stack.Screen

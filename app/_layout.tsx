@@ -6,8 +6,7 @@ import * as Notifications from 'expo-notifications'
 
 import '../global.css'
 import { RoomChatProvider } from '@/context/roomChatContext'
-import { Button } from 'react-native'
-import { useNotification } from '@/hooks/useNotification'
+import { NotificationProvider } from '@/context/notificationContext'
 if (__DEV__) require('../ReactotronConfig')
 
 Notifications.setNotificationHandler({
@@ -21,7 +20,6 @@ Notifications.setNotificationHandler({
 const MainLayout = () => {
     const segments = useSegments()
     const { isAuthenticated } = useAuthContext()
-    const { sendPushNotification, expoPushToken } = useNotification()
 
     useEffect(() => {
         const inApp = segments[0] === '(app)'
@@ -33,21 +31,7 @@ const MainLayout = () => {
         }
     }, [isAuthenticated, segments])
 
-    return (
-        <>
-            <Slot />
-            <Button
-                title="Press to Send Notification"
-                onPress={async () => {
-                    await sendPushNotification(
-                        expoPushToken,
-                        'Chat App Notification',
-                        'Ini Body'
-                    )
-                }}
-            />
-        </>
-    )
+    return <Slot />
 }
 
 export default function RootLayout() {
@@ -55,7 +39,9 @@ export default function RootLayout() {
         <MenuProvider>
             <AuthContextProvider>
                 <RoomChatProvider>
-                    <MainLayout />
+                    <NotificationProvider>
+                        <MainLayout />
+                    </NotificationProvider>
                 </RoomChatProvider>
             </AuthContextProvider>
         </MenuProvider>

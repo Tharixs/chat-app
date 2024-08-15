@@ -3,7 +3,7 @@ import Constants from 'expo-constants'
 import { Platform } from 'react-native'
 
 import * as Notifications from 'expo-notifications'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 export const useNotification = () => {
     const [expoPushToken, setExpoPushToken] = useState('')
     const [notification, setNotification] = useState<
@@ -40,7 +40,7 @@ export const useNotification = () => {
         throw new Error(errorMessage)
     }
 
-    async function registerForPushNotificationsAsync() {
+    const registerForPushNotificationsAsync = useCallback(async () => {
         if (Platform.OS === 'android') {
             Notifications.setNotificationChannelAsync('default', {
                 name: 'default',
@@ -85,7 +85,7 @@ export const useNotification = () => {
                 'Must use physical device for push notifications'
             )
         }
-    }
+    }, [])
 
     useEffect(() => {
         registerForPushNotificationsAsync()

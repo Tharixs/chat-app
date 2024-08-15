@@ -19,7 +19,6 @@ export const useAuth = () => {
     useEffect(() => {
         const unsubs = auth().onAuthStateChanged(async (user) => {
             if (user) {
-                setIsAuthenticated(true)
                 try {
                     const newUser = await updateDataUser(user?.uid)
                     setUser(newUser as User)
@@ -27,16 +26,16 @@ export const useAuth = () => {
                     console.log(error)
                 }
             } else {
-                setIsAuthenticated(false)
                 setUser(null)
             }
         })
         return () => unsubs()
-    }, [setIsAuthenticated])
+    }, [])
 
     const handleLogin = async (email: string, password: string) => {
         try {
             await login(email, password)
+            setIsAuthenticated(true)
         } catch (error) {
             console.log(error)
             throw error
@@ -46,6 +45,7 @@ export const useAuth = () => {
     const handleLogout = async () => {
         try {
             await logout()
+            setIsAuthenticated(false)
         } catch (error) {
             console.log(error)
             throw new Error('Error logout')
@@ -66,7 +66,7 @@ export const useAuth = () => {
     }
     const handleUpdateUserProfile = async (
         id: string,
-        name?: string,
+        userName?: string,
         imageUrl?: ImagePicker.ImagePickerAsset
     ) => {
         try {
@@ -76,9 +76,9 @@ export const useAuth = () => {
                     `images/profile/${id}/${fileName}`
                 )
                 const resUpImage = await uploadImage(imageUrl, storageRefImage)
-                await updateUserProfile({ id, name, imageUrl: resUpImage })
+                await updateUserProfile({ id, userName, imageUrl: resUpImage })
             } else {
-                await updateUserProfile({ id, name })
+                await updateUserProfile({ id, userName })
             }
         } catch (error) {
             console.log(error)

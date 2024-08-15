@@ -20,7 +20,7 @@ export const updateUserProfile = async (data: Partial<User>) => {
             .collection('users')
             .doc(data.id)
             .update({
-                ...(data.name && { name: data.name }),
+                ...(data.userName && { userName: data.userName }),
                 ...(data.imageUrl && { imageUrl: data.imageUrl }),
             })
         updateDataUser(data?.id!)

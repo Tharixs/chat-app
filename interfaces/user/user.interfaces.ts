@@ -4,7 +4,7 @@ interface User {
     email: string
     id: string
     imageUrl: string
-    name: string
+    userName: string
 }
 
 interface CreatedAt {

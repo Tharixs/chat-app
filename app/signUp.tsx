@@ -25,7 +25,7 @@ export default function SignUp() {
         message: string
     }>({ success: false, error: false, message: '' })
 
-    const { control, formState, handleSubmit, getValues } = useForm({
+    const { control, formState, handleSubmit, getValues, reset } = useForm({
         resolver: yupResolver(signUpSchema),
         delayError: 300,
     })
@@ -34,6 +34,7 @@ export default function SignUp() {
             setLoading(true)
             await handleRegister(data.email, data.password, data.userName)
             setRegisterStatus({ success: true, error: false, message: '' })
+            reset()
         } catch (err: any) {
             setRegisterStatus({
                 success: false,
@@ -52,13 +53,14 @@ export default function SignUp() {
                 status="fail"
                 title="Register failed !"
                 message={registerStatus.message}
-                onClose={() =>
+                onClose={() => {
                     setRegisterStatus({
                         success: false,
                         error: false,
                         message: '',
                     })
-                }
+                    router.push('/signIn')
+                }}
             />
 
             <ModalStatus
