@@ -3,7 +3,8 @@ import firestore from '@react-native-firebase/firestore'
 
 export const login = async (email: string, password: string) => {
     try {
-        await auth().signInWithEmailAndPassword(email, password)
+        const res = await auth().signInWithEmailAndPassword(email, password)
+        return res
     } catch (error) {
         console.error('error login', (error as Error).message)
         if ((error as Error).message.includes('[auth/too-many-requests]')) {

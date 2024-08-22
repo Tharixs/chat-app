@@ -7,6 +7,12 @@ import * as Notifications from 'expo-notifications'
 import '../global.css'
 import { RoomChatProvider } from '@/context/roomChatContext'
 import { NotificationProvider } from '@/context/notificationContext'
+import {
+    ModalContextProvider,
+    useModalActionContext,
+    useModalStateContext,
+} from '@/context/modalContext'
+import { ModalStatus } from '@/components/modal/StatusModal'
 if (__DEV__) require('../ReactotronConfig')
 
 Notifications.setNotificationHandler({
@@ -20,6 +26,8 @@ Notifications.setNotificationHandler({
 const MainLayout = () => {
     const segments = useSegments()
     const { isAuthenticated } = useAuthContext()
+    const { isVisible, typeModal, body, title } = useModalStateContext()
+    const { closeModal } = useModalActionContext()
 
     useEffect(() => {
         const inApp = segments[0] === '(app)'
@@ -31,7 +39,20 @@ const MainLayout = () => {
         }
     }, [isAuthenticated, segments])
 
-    return <Slot />
+    return (
+        <>
+            <ModalStatus
+                isVisible={isVisible}
+                status={typeModal as 'success' | 'fail'}
+                title={title}
+                message={body}
+                onClose={() => {
+                    closeModal()
+                }}
+            />
+            <Slot />
+        </>
+    )
 }
 
 export default function RootLayout() {
@@ -40,7 +61,9 @@ export default function RootLayout() {
             <AuthContextProvider>
                 <RoomChatProvider>
                     <NotificationProvider>
-                        <MainLayout />
+                        <ModalContextProvider>
+                            <MainLayout />
+                        </ModalContextProvider>
                     </NotificationProvider>
                 </RoomChatProvider>
             </AuthContextProvider>

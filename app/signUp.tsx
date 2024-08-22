@@ -1,5 +1,5 @@
 import TextInput from '@/components/TextInput'
-import React, { useState } from 'react'
+import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Image, Pressable, Text, View } from 'react-native'
@@ -11,71 +11,38 @@ import { Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import { signUpSchema } from '@/schemas/auth/signUp.schema'
 import { AvoidingKeyboard } from '@/components/AvoidingKeyboard'
-import { useAuthContext } from '@/context/authContext'
 import Button from '@/components/Button'
 import LotieAnimationIcon from '@/components/LotieAnimationIcon'
-import { ModalStatus } from '@/components/modal/StatusModal'
+import { register } from '@/services/authService'
+import { useModalActionContext } from '@/context/modalContext'
 
 export default function SignUp() {
-    const [loading, setLoading] = useState(false)
-    const { handleRegister } = useAuthContext()
-    const [registerStatus, setRegisterStatus] = useState<{
-        success: boolean
-        error: boolean
-        message: string
-    }>({ success: false, error: false, message: '' })
-
+    const { openModal } = useModalActionContext()
     const { control, formState, handleSubmit, getValues, reset } = useForm({
         resolver: yupResolver(signUpSchema),
         delayError: 300,
     })
     const onSubmit: SubmitHandler<SignUp> = async (data) => {
         try {
-            setLoading(true)
-            await handleRegister(data.email, data.password, data.userName)
-            setRegisterStatus({ success: true, error: false, message: '' })
-            reset()
-        } catch (err: any) {
-            setRegisterStatus({
-                success: false,
-                error: true,
-                message: err.message,
+            await register(data.email, data.password, data.userName)
+            openModal({
+                typeModal: 'success',
+                title: 'Register Success !',
+                body: 'You have successfully registered your account, please login',
             })
-        } finally {
-            setLoading(false)
+            router.push('/signIn')
+            reset()
+        } catch (err) {
+            openModal({
+                typeModal: 'fail',
+                title: 'Register Failed !',
+                body: (err as Error).message,
+            })
         }
     }
 
     return (
         <AvoidingKeyboard className="flex-1 bg-white">
-            <ModalStatus
-                isVisible={registerStatus.error}
-                status="fail"
-                title="Register failed !"
-                message={registerStatus.message}
-                onClose={() => {
-                    setRegisterStatus({
-                        success: false,
-                        error: false,
-                        message: '',
-                    })
-                    router.push('/signIn')
-                }}
-            />
-
-            <ModalStatus
-                isVisible={registerStatus.success}
-                status="success"
-                title="Register Success !"
-                message={registerStatus.message}
-                onClose={() => {
-                    setRegisterStatus({
-                        success: false,
-                        error: false,
-                        message: '',
-                    })
-                }}
-            />
             <View
                 style={{ paddingTop: hp(8), paddingHorizontal: wp(5) }}
                 className="gap-12"
@@ -149,7 +116,7 @@ export default function SignUp() {
                 </View>
                 <View className="gap-4">
                     <View>
-                        {loading ? (
+                        {formState.isSubmitting ? (
                             <View className="justify-center items-center">
                                 <LotieAnimationIcon
                                     source={require('@/assets/images/loading.json')}

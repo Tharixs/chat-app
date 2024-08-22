@@ -42,7 +42,7 @@ export const ModalStatus: React.FC<{
                             />
                         </View>
                     </Modal.Header>
-                    <Modal.Body className="gap-2 m-4">
+                    <Modal.Body className="gap-2 mb-4 mx-4">
                         <Text
                             style={{ fontSize: hp(2.7) }}
                             className="text-center font-bold tracking-wider"

@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Image } from 'expo-image'
 import { useAuthContext } from '@/context/authContext'
 import {
@@ -15,34 +15,40 @@ import * as Updates from 'expo-updates'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { userUpdateProfileSchema } from '@/schemas/user/userUpdateProfile.schema'
 import { router } from 'expo-router'
-import throttle from '@/utils/throttle'
 import { useImagePicker } from '@/hooks/useImagePicker'
 import { useUpdateApp } from '@/hooks/useUpdateApp.hook'
+import { useModalActionContext } from '@/context/modalContext'
+import LotieAnimationIcon from '@/components/LotieAnimationIcon'
 
 export default function Profile() {
     const { user, handleUpdateUserProfile, refetchUser } = useAuthContext()
-    const userData: User = user as unknown as User
     const { pickImage, imageRes, image } = useImagePicker()
     const { showButtonUpdate } = useUpdateApp()
-    const { control, handleSubmit, getValues } = useForm({
+    const { control, handleSubmit, getValues, formState } = useForm({
         resolver: yupResolver(userUpdateProfileSchema),
     })
-    const handleUpdateProfile: SubmitHandler<Partial<User>> = throttle(
-        async (data: Partial<User>) => {
-            try {
-                await handleUpdateUserProfile(
-                    userData.id,
-                    data.userName,
-                    imageRes
-                )
-                await refetchUser()
-                router.replace('home')
-            } catch (error) {
-                console.error('error update user profile', error)
-            }
-        },
-        1000
-    )
+    const { openModal } = useModalActionContext()
+    const handleUpdateProfile: SubmitHandler<Partial<User>> = async (
+        data: Partial<User>
+    ) => {
+        try {
+            await handleUpdateUserProfile(user?.id!, data.userName, imageRes)
+            await refetchUser()
+            openModal({
+                typeModal: 'success',
+                title: 'Update Success !',
+                body: 'You have successfully updated your profile',
+            })
+            router.replace('home')
+        } catch (error) {
+            console.error('error update user profile', error)
+            openModal({
+                typeModal: 'fail',
+                title: 'Update Failed !',
+                body: (error as Error).message,
+            })
+        }
+    }
 
     return (
         <AvoidingKeyboard className="flex-1 bg-white">
@@ -61,7 +67,7 @@ export default function Profile() {
                             borderRadius: 100,
                         }}
                         source={
-                            (image || userData?.imageUrl) ??
+                            (image || user?.imageUrl) ??
                             require('@/assets/images/avatar.png')
                         }
                         contentFit="cover"
@@ -75,13 +81,13 @@ export default function Profile() {
                         control={control}
                         name="email"
                         label="Email"
-                        value={userData?.email}
+                        value={user?.email}
                         editable={false}
                     />
                     <TextInput
                         label="User Name"
                         control={control}
-                        value={userData?.userName}
+                        value={user?.userName}
                         name="userName"
                     />
                 </View>
@@ -90,13 +96,24 @@ export default function Profile() {
                 style={{ paddingTop: hp(4), paddingHorizontal: wp(5) }}
                 className="gap-4"
             >
-                <Button
-                    label="Update Profile"
-                    mode="contained"
-                    onPress={() =>
-                        handleSubmit(() => handleUpdateProfile(getValues()))()
-                    }
-                />
+                {formState.isSubmitting ? (
+                    <View className="justify-center items-center">
+                        <LotieAnimationIcon
+                            size={hp(15.5)}
+                            source={require('../../assets/images/loading.json')}
+                        />
+                    </View>
+                ) : (
+                    <Button
+                        label="Update Profile"
+                        mode="contained"
+                        onPress={() =>
+                            handleSubmit(() =>
+                                handleUpdateProfile(getValues())
+                            )()
+                        }
+                    />
+                )}
                 <Button
                     label={
                         showButtonUpdate

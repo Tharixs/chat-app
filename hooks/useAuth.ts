@@ -1,4 +1,4 @@
-import { login, logout, register } from '@/services/authService'
+import { login } from '@/services/authService'
 import {
     getAllUsers,
     getUserById,
@@ -7,7 +7,7 @@ import {
     uploadImage,
 } from '@/services/userService'
 import auth from '@react-native-firebase/auth'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import storage from '@react-native-firebase/storage'
 import { useMMKVBoolean } from 'react-native-mmkv'
@@ -16,52 +16,18 @@ export const useAuth = () => {
     const [user, setUser] = useState<User | null>(null)
     const [isAuthenticated, setIsAuthenticated] =
         useMMKVBoolean('isAuthenticated')
-    useEffect(() => {
-        const unsubs = auth().onAuthStateChanged(async (user) => {
-            if (user) {
-                try {
-                    const newUser = await updateDataUser(user?.uid)
-                    setUser(newUser as User)
-                } catch (error) {
-                    console.log(error)
-                }
-            } else {
-                setUser(null)
-            }
-        })
-        return () => unsubs()
-    }, [])
 
     const handleLogin = async (email: string, password: string) => {
         try {
             await login(email, password)
-            setIsAuthenticated(true)
+            const newUser = await updateDataUser(auth().currentUser?.uid!)
+            if (newUser) {
+                setUser(newUser as User)
+                setIsAuthenticated(true)
+            }
         } catch (error) {
             console.log(error)
-            throw error
-        }
-    }
-
-    const handleLogout = async () => {
-        try {
-            await logout()
-            setIsAuthenticated(false)
-        } catch (error) {
-            console.log(error)
-            throw new Error('Error logout')
-        }
-    }
-
-    const handleRegister = async (
-        email: string,
-        password: string,
-        userName: string
-    ) => {
-        try {
-            await register(email, password, userName)
-        } catch (error) {
-            console.log('register eror', error)
-            throw error
+            throw Error((error as Error).message)
         }
     }
     const handleUpdateUserProfile = async (
@@ -124,9 +90,8 @@ export const useAuth = () => {
     return {
         user,
         isAuthenticated,
+        setIsAuthenticated,
         handleLogin,
-        handleLogout,
-        handleRegister,
         handleUpdateUserProfile,
         fetchAllUsers,
         refetchUser,

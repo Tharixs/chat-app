@@ -4,17 +4,10 @@ import { useAuth } from '@/hooks/useAuth'
 import ImagePicker from 'expo-image-picker'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
 
-type AuthContextProps = {
+type AuthContextHooksProps = {
     user: User | null
     isAuthenticated: boolean | undefined
-    handleLogin: (email: string, password: string) => Promise<void>
-    handleLogout: () => Promise<void>
-    handleRegister: (
-        email: string,
-        password: string,
-        userName: string,
-        imageUrl?: string
-    ) => Promise<void>
+    setIsAuthenticated: (value: boolean) => void
     handleUpdateUserProfile: (
         id: string,
         userName?: string,
@@ -25,21 +18,26 @@ type AuthContextProps = {
     handleGetUserById: (
         userId: string
     ) => Promise<FirebaseFirestoreTypes.DocumentData>
+    handleLogin: (email: string, password: string) => Promise<void>
 }
-const AuthContext = createContext<AuthContextProps | undefined>(undefined)
 
 type AuthContextProviderProps = {
     children: ReactNode
 }
 
-export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
-    const auth = useAuth()
+const AuthHooksContext = createContext<AuthContextHooksProps | null>(null)
 
-    return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>
+export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
+    const authHook = useAuth()
+    return (
+        <AuthHooksContext.Provider value={authHook}>
+            {children}
+        </AuthHooksContext.Provider>
+    )
 }
 
-export const useAuthContext = (): AuthContextProps => {
-    const value = useContext(AuthContext)
+export const useAuthContext = (): AuthContextHooksProps => {
+    const value = useContext(AuthHooksContext)
     if (!value) {
         throw new Error('useAuth must be used within an AuthContextProvider')
     }

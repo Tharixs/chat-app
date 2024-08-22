@@ -9,15 +9,29 @@ import { Menu, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
 import MenuItem from '../pop-up-menu/MenuItem'
 import { AntDesign, Feather } from '@expo/vector-icons'
 import { router } from 'expo-router'
-import { getFCMTokenByUserId, updateFCMToken } from '@/services/fcmService'
-import auth from '@react-native-firebase/auth'
+import { logout } from '@/services/authService'
+import { useModalActionContext } from '@/context/modalContext'
 
 const ios = Platform.OS === 'ios'
 const HomeHeader = () => {
     const { top } = useSafeAreaInsets()
-    const { user, handleLogout } = useAuthContext()
+    const { user } = useAuthContext()
+    const { openModal } = useModalActionContext()
+    const { setIsAuthenticated } = useAuthContext()
 
-    const userData: User = user as unknown as User
+    const handleLogout = async () => {
+        try {
+            await logout()
+            setIsAuthenticated(false)
+        } catch (error) {
+            openModal({
+                body: (error as Error).message,
+                title: 'Logout Failed',
+                typeModal: 'fail',
+            })
+        }
+    }
+
     return (
         <View
             style={{ paddingTop: ios ? top : top + 10 }}
@@ -41,7 +55,7 @@ const HomeHeader = () => {
                                 borderRadius: 100,
                             }}
                             source={
-                                userData?.imageUrl ??
+                                user?.imageUrl ??
                                 require('@/assets/images/avatar.png')
                             }
                             contentFit="cover"
@@ -72,16 +86,16 @@ const HomeHeader = () => {
                         <View className="border-b p-[1px] border-gray-300 mx-3" />
                         <MenuItem
                             onClick={async () => {
-                                const data = await getFCMTokenByUserId(
-                                    userData?.id
-                                )
+                                // const data = await getFCMTokenByUserId(
+                                //     userData?.id
+                                // )
                                 await handleLogout()
-                                await updateFCMToken({
-                                    createdAt: data?.createdAt,
-                                    fcmToken: data?.fcmToken,
-                                    revoked: true,
-                                    userId: data?.userId,
-                                })
+                                // await updateFCMToken({
+                                //     createdAt: data?.createdAt,
+                                //     fcmToken: data?.fcmToken,
+                                //     revoked: true,
+                                //     userId: data?.userId,
+                                // })
                             }}
                             text="Sign out"
                             value={null}

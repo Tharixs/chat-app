@@ -1,6 +1,6 @@
 import TextInput from '@/components/TextInput'
 import { signInSchema } from '@/schemas/auth/signIn.schema'
-import React, { useState } from 'react'
+import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Image, Pressable, Text, View } from 'react-native'
@@ -11,59 +11,37 @@ import {
 import { Ionicons } from '@expo/vector-icons'
 import { Link, router } from 'expo-router'
 import { AvoidingKeyboard } from '@/components/AvoidingKeyboard'
-import { useAuthContext } from '@/context/authContext'
 import Button from '@/components/Button'
 import LotieAnimationIcon from '@/components/LotieAnimationIcon'
-import { ModalStatus } from '@/components/modal/StatusModal'
-import { storeFCMToken } from '@/services/fcmService'
-import { useNotificationContext } from '@/context/notificationContext'
-
-import auth from '@react-native-firebase/auth'
+import { useModalActionContext } from '@/context/modalContext'
+import { useAuthContext } from '@/context/authContext'
 
 export default function SignIn() {
     const { handleLogin } = useAuthContext()
-    const [loading, setLoading] = useState(false)
-    const [isLoginError, setIsLoginError] = useState(false)
-    const [isLoginSuccess, setIsLoginSuccess] = useState(false)
-    const [errorLogin, setErrorLogin] = useState('')
     const { control, formState, handleSubmit, getValues } = useForm({
         resolver: yupResolver(signInSchema),
         delayError: 300,
     })
-    const { expoPushToken } = useNotificationContext()
+    const { openModal } = useModalActionContext()
     const onSubmit: SubmitHandler<SignIn> = async (data) => {
-        setLoading(true)
         try {
             await handleLogin(data.email, data.password)
-            await storeFCMToken(expoPushToken, auth()?.currentUser?.uid!)
-            setIsLoginSuccess(true)
-            setIsLoginError(false)
-        } catch (err) {
-            console.error('Error login', err)
-            setIsLoginError(true)
-            setIsLoginSuccess(false)
-            setErrorLogin((err as Error).message)
-        } finally {
-            setLoading(false)
+            openModal({
+                body: 'You have successfully logged in',
+                title: 'Login Success',
+                typeModal: 'success',
+            })
+        } catch (error) {
+            openModal({
+                body: (error as Error).message,
+                title: 'Login Failed',
+                typeModal: 'fail',
+            })
         }
     }
 
     return (
         <AvoidingKeyboard className="flex-1 bg-white gap-12">
-            <ModalStatus
-                isVisible={isLoginError}
-                status="fail"
-                title="Login failed !"
-                message={errorLogin}
-                onClose={() => setIsLoginError(false)}
-            />
-            <ModalStatus
-                isVisible={isLoginSuccess}
-                status="success"
-                title="Login Success !"
-                message={'lets get started'}
-                onClose={() => setIsLoginSuccess(false)}
-            />
             <View
                 style={{ paddingTop: hp(8), paddingHorizontal: wp(5) }}
                 className="gap-12"
@@ -131,7 +109,7 @@ export default function SignIn() {
                 </View>
                 <View className="gap-4">
                     <View>
-                        {loading ? (
+                        {formState.isSubmitting ? (
                             <View className="justify-center items-center">
                                 <LotieAnimationIcon
                                     size={hp(15.5)}
