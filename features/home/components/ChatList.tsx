@@ -1,7 +1,7 @@
 import { View, FlatList, Text, RefreshControl } from 'react-native'
 import React from 'react'
-import ChatItem from './ChatItem'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
+import HomeChatItem from './HomeChatItem/HomeChatItem'
 
 export default function ChatList({
     users,
@@ -28,7 +28,7 @@ export default function ChatList({
                     />
                 }
                 renderItem={({ item, index }) => (
-                    <ChatItem
+                    <HomeChatItem
                         item={item as User}
                         noBorder={index === users.length - 1}
                     />

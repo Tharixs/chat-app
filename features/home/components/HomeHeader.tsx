@@ -6,11 +6,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAuthContext } from '@/context/authContext'
 import { blurHash } from '@/utils/common'
 import { Menu, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
-import MenuItem from '../pop-up-menu/MenuItem'
+import MenuItem from '../../../components/pop-up-menu/MenuItem'
 import { AntDesign, Feather } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import { logout } from '@/services/authService'
 import { useModalActionContext } from '@/context/modalContext'
+import throttle from '@/utils/throttle'
 
 const ios = Platform.OS === 'ios'
 const HomeHeader = () => {
@@ -31,6 +32,10 @@ const HomeHeader = () => {
             })
         }
     }
+
+    const handleGoProfileTrotle = throttle(() => {
+        router.push('/profile')
+    }, 1000)
 
     return (
         <View
@@ -78,7 +83,7 @@ const HomeHeader = () => {
                         }}
                     >
                         <MenuItem
-                            onClick={() => router.push('/profile')}
+                            onClick={handleGoProfileTrotle}
                             text="Profile"
                             value={null}
                             icon={<Feather name="user" size={hp(2.5)} />}

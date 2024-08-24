@@ -1,5 +1,5 @@
-import ChatHeader from '@/components/chat/ChatHeader'
-import HomeHeader from '@/components/home/HomeHeader'
+import ChatHeader from '@/features/chat/components/ChatHeader'
+import HomeHeader from '@/features/home/components/HomeHeader'
 import { Feather } from '@expo/vector-icons'
 import { router, Stack } from 'expo-router'
 import React from 'react'

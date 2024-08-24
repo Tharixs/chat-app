@@ -24,6 +24,8 @@ export const useAuth = () => {
             if (newUser) {
                 setUser(newUser as User)
                 setIsAuthenticated(true)
+            } else {
+                throw Error('No user found please contact support!')
             }
         } catch (error) {
             console.log(error)

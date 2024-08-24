@@ -1,9 +1,9 @@
 import { View, Text, Pressable } from 'react-native'
 import React from 'react'
-import Modal from '../Modal'
+import Modal from './Modal'
 import { Feather } from '@expo/vector-icons'
-import LotieAnimationIcon from '../LotieAnimationIcon'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
+import LotieAnimationIcon from './LotieAnimationIcon'
 
 export const ModalStatus: React.FC<{
     isVisible: boolean

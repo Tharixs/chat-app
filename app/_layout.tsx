@@ -12,7 +12,7 @@ import {
     useModalActionContext,
     useModalStateContext,
 } from '@/context/modalContext'
-import { ModalStatus } from '@/components/modal/StatusModal'
+import { ModalStatus } from '@/components/StatusModal'
 if (__DEV__) require('../ReactotronConfig')
 
 Notifications.setNotificationHandler({

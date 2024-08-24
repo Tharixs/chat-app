@@ -17,7 +17,8 @@ export default function ChatHeader() {
     const userId = useMemo(
         () => item && (JSON.parse(item as string).id as string),
         [item]
-    )
+    ) // GET USER RECEIVER
+
     useEffect(() => {
         if (userId) {
             const fetchUserById = async () => {

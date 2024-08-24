@@ -4,7 +4,7 @@ import { ChatMessageItem } from './ChatMessageItem'
 import { useAuthContext } from '@/context/authContext'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
-import LotieAnimationIcon from '../LotieAnimationIcon'
+import LotieAnimationIcon from '@/components/LotieAnimationIcon'
 
 export const ChatMessageList: React.FC<{
     loading: boolean
@@ -30,11 +30,11 @@ export const ChatMessageList: React.FC<{
             contentContainerStyle={{ marginBottom: 16 }}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={() => (
-                <View className="flex-1 justify-center align-center rotate-180">
+                <View className="flex-1 justify-center align-center items-center rotate-180">
                     {props.loading ? (
                         <LotieAnimationIcon
-                            source={require('../../assets/images/loading.json')}
-                            size={hp(5)}
+                            source={require('../../../assets/images/loading.json')}
+                            size={hp(40)}
                         />
                     ) : (
                         <Text
