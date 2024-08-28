@@ -7,6 +7,23 @@ import { Text, TouchableOpacity, View } from 'react-native'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
 export default function _layout() {
+    const DefaultHeaderScreen = ({ label }: { label: string }) => {
+        return (
+            <TouchableOpacity
+                className="flex-row items-center gap-4"
+                onPress={() => router.back()}
+            >
+                <Feather name="arrow-left" size={24} color="black" />
+                <Text
+                    style={{ fontSize: hp(2) }}
+                    className="font-semibold text-neutral-800"
+                >
+                    {label}
+                </Text>
+            </TouchableOpacity>
+        )
+    }
+
     return (
         <Stack>
             <Stack.Screen
@@ -47,24 +64,17 @@ export default function _layout() {
                     animation: 'slide_from_right',
                     headerShadowVisible: false,
                     headerTitle: '',
-                    headerLeft: () => (
-                        <TouchableOpacity
-                            className="flex-row items-center gap-4"
-                            onPress={() => router.back()}
-                        >
-                            <Feather
-                                name="arrow-left"
-                                size={24}
-                                color="black"
-                            />
-                            <Text
-                                style={{ fontSize: hp(2) }}
-                                className="font-semibold text-neutral-800"
-                            >
-                                Profile
-                            </Text>
-                        </TouchableOpacity>
-                    ),
+                    headerLeft: () => <DefaultHeaderScreen label="Profile" />,
+                }}
+            />
+
+            <Stack.Screen
+                name="search"
+                options={{
+                    animation: 'slide_from_left',
+                    headerTitle: '',
+                    headerShadowVisible: false,
+                    headerShown: false,
                 }}
             />
         </Stack>

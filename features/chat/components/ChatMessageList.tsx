@@ -11,7 +11,7 @@ export const ChatMessageList: React.FC<{
     messages: FirebaseFirestoreTypes.DocumentData[]
     refetch: () => void
 }> = (props) => {
-    const user = useAuthContext().user
+    const { user } = useAuthContext()
 
     return (
         <FlatList

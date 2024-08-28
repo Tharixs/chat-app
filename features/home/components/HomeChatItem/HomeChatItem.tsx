@@ -2,9 +2,9 @@ import { router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import throttle from '@/utils/throttle'
 import auth from '@react-native-firebase/auth'
-import { useRoomChatContext } from '@/context/roomChatContext'
 import { useChatHook } from '@/hooks/useChat'
 import ChatItemView from './HomeChatItemView'
+import { getLastMessage } from '@/services/roomChatService'
 const HomeChatItem = ({
     item,
     noBorder,
@@ -12,7 +12,6 @@ const HomeChatItem = ({
     item: User
     noBorder: boolean
 }) => {
-    const { getLastMessage } = useRoomChatContext()
     const [lastMessagesData, setLastMessageData] = useState<any>()
     const { handleDisplayLastDateTime } = useChatHook()
     const userId = auth()?.currentUser?.uid
@@ -33,7 +32,7 @@ const HomeChatItem = ({
             }
         )
         return unsubscribe
-    }, [getLastMessage, item, userId])
+    }, [item, userId])
 
     const handleDisplayLastMessage = (): string => {
         if (lastMessagesData) {

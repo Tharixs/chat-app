@@ -6,14 +6,18 @@ export const useImagePicker = () => {
     const [image, setImage] = useState<string | undefined>()
     const [imageRes, setImageRes] = useState<ImagePicker.ImagePickerAsset>()
 
-    const pickImage = async () => {
+    const pickImage = async (source: 'library' | 'camera') => {
+        const imageOptions: ImagePicker.ImagePickerOptions = {
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        }
         try {
-            const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.All,
-                allowsEditing: true,
-                aspect: [4, 3],
-                quality: 1,
-            })
+            const result =
+                source === 'camera'
+                    ? await ImagePicker.launchCameraAsync(imageOptions)
+                    : await ImagePicker.launchImageLibraryAsync(imageOptions)
             if (!result.canceled) {
                 setImage(
                     Platform.OS === 'ios'

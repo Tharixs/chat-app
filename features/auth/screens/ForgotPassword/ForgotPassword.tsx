@@ -1,10 +1,10 @@
 import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { forgotPasswordSchema } from '@/schemas/auth/forgotPassword.schema'
 import { forgotPassword } from '@/services/authService'
 import ForgotPasswordView from './ForgotPasswordView'
 import { useModalActionContext } from '@/context/modalContext'
+import { forgotPasswordSchema } from '../../schemas/forgotPassword.schema'
 
 export default function ForgotPassword() {
     const { control, formState, handleSubmit, getValues, reset } = useForm({

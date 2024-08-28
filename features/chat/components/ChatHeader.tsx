@@ -2,12 +2,12 @@ import { Text, View } from 'react-native'
 import React, { useEffect, useMemo, useState } from 'react'
 import { router, useGlobalSearchParams } from 'expo-router'
 import { Feather } from '@expo/vector-icons'
-import { useAuth } from '@/hooks/useAuth'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
 import { Image } from 'expo-image'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { blurHash } from '@/utils/common'
 import ImageModal from 'react-native-image-modal'
+import { useAuth } from '@/features/auth/hooks/useAuth'
 
 export default function ChatHeader() {
     const { item } = useGlobalSearchParams()

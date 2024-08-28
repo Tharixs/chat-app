@@ -7,7 +7,7 @@ const TextInput: React.FC<
     {
         icon?: ReactElement
         positionIcon?: 'left' | 'right'
-        control?: Control<FieldValues>
+        control: Control<FieldValues>
         name?: string
         errorMessage?: string
         value?: string

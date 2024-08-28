@@ -1,10 +1,10 @@
-import { signInSchema } from '@/schemas/auth/signIn.schema'
 import React from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useModalActionContext } from '@/context/modalContext'
 import { useAuthContext } from '@/context/authContext'
 import LoginView from './LoginView'
+import { signInSchema } from '../../schemas/signIn.schema'
 
 const Login = () => {
     const { control, formState, handleSubmit, getValues } = useForm({

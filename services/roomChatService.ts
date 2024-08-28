@@ -4,22 +4,6 @@ import firestore, {
     FirebaseFirestoreTypes,
 } from '@react-native-firebase/firestore'
 
-export const createRoomChatIfNotExists = async (
-    userSenderId: string,
-    userReceiverId: string
-) => {
-    const roomId = getRoomId(userSenderId, userReceiverId)
-    try {
-        await firestore().collection('rooms').doc(roomId).set({
-            id: roomId,
-            createdAt: firestore.FieldValue.serverTimestamp(),
-        })
-    } catch (error) {
-        console.log(error)
-        throw new Error('Error creating room chat')
-    }
-}
-
 export const sendMessage = async (
     userSenderId: string,
     userReceiverId: string,
@@ -48,16 +32,21 @@ export const getAllMessages = (
         React.SetStateAction<FirebaseFirestoreTypes.DocumentData[]>
     >
 ) => {
-    const roomId = getRoomId(userSenderId, userReceiverId)
-    const messageRef = firestore()
-        .collection('rooms')
-        .doc(roomId)
-        .collection('messages')
-        .orderBy('createdAt', 'desc')
-    return messageRef.onSnapshot((querySnapshot) => {
-        const messages = querySnapshot.docs.map((doc) => doc.data())
-        setMessages(messages)
-    })
+    try {
+        const roomId = getRoomId(userSenderId, userReceiverId)
+        const messageRef = firestore()
+            .collection('rooms')
+            .doc(roomId)
+            .collection('messages')
+            .orderBy('createdAt', 'desc')
+        return messageRef.onSnapshot((querySnapshot) => {
+            const messages = querySnapshot.docs.map((doc) => doc.data())
+            setMessages(messages)
+        })
+    } catch (error) {
+        console.log(error)
+        throw new Error((error as Error).message)
+    }
 }
 
 export const getLastMessage = (

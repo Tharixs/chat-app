@@ -3,9 +3,10 @@ import { useAuthContext } from '@/context/authContext'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
 import React, { useCallback, useEffect } from 'react'
 import { Alert, StatusBar, View } from 'react-native'
+import { getAllUsers } from '@/services/userService'
 
 const Home = () => {
-    const { fetchAllUsers } = useAuthContext()
+    const { user } = useAuthContext()
     const [users, setUsers] = React.useState<
         FirebaseFirestoreTypes.DocumentData[]
     >([])
@@ -14,7 +15,8 @@ const Home = () => {
     const loadAllUsers = useCallback(async () => {
         setLoading(true)
         try {
-            const usersData = await fetchAllUsers()
+            if (!user) return
+            const usersData = await getAllUsers(user?.id!)
             setUsers(usersData)
         } catch (error) {
             console.log((error as Error).message)
@@ -22,7 +24,7 @@ const Home = () => {
         } finally {
             setLoading(false)
         }
-    }, [fetchAllUsers])
+    }, [user])
 
     useEffect(() => {
         loadAllUsers()

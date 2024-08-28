@@ -30,17 +30,27 @@ export const updateUserProfile = async (data: Partial<User>) => {
     }
 }
 
-export const getAllUsers = async (userId: string) => {
+export const getAllUsers = async (userId?: string, searchByName?: string) => {
     try {
-        const querySnapshot = await firestore()
-            .collection('users')
-            .where('id', '!=', userId)
-            .get()
-        const users = querySnapshot.docs.map((doc) => doc.data())
-        return users
+        if (userId && !searchByName) {
+            const querySnapshot = await firestore()
+                .collection('users')
+                .where('id', '!=', userId)
+                .get()
+            const users = querySnapshot.docs.map((doc) => doc.data())
+            return users
+        } else {
+            const querySnapshot = await firestore()
+                .collection('users')
+                .where('userName', '>=', searchByName)
+                .where('userName', '<=', searchByName + '\uf8ff')
+                .get()
+            const users = querySnapshot.docs.map((doc) => doc.data())
+            return users
+        }
     } catch (error) {
         console.error('error fetch users', error)
-        throw new Error('Error fetching users')
+        throw new Error((error as Error).message)
     }
 }
 
@@ -54,7 +64,7 @@ export const getUserById = async (userId: string) => {
         return user[0]
     } catch (error) {
         console.error('Error User', error)
-        throw new Error('Error getting users')
+        throw new Error((error as Error).message)
     }
 }
 
@@ -74,6 +84,6 @@ export const uploadImage = async (
         return imageUrl
     } catch (error) {
         console.error('error upload image', error)
-        throw new Error(`Error uploading image ${error}`)
+        throw new Error((error as Error).message)
     }
 }

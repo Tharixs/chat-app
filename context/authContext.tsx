@@ -1,24 +1,23 @@
 import React, { ReactNode, createContext, useContext } from 'react'
 
-import { useAuth } from '@/hooks/useAuth'
 import ImagePicker from 'expo-image-picker'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
+import { useAuth } from '@/features/auth/hooks/useAuth'
 
 type AuthContextHooksProps = {
-    user: User | null
+    user?: User | null
     isAuthenticated: boolean | undefined
-    setIsAuthenticated: (value: boolean) => void
     handleUpdateUserProfile: (
         id: string,
         userName?: string,
         imageUrl?: ImagePicker.ImagePickerAsset
     ) => Promise<void>
-    fetchAllUsers: () => Promise<FirebaseFirestoreTypes.DocumentData[]>
     refetchUser: () => Promise<void>
     handleGetUserById: (
         userId: string
     ) => Promise<FirebaseFirestoreTypes.DocumentData>
     handleLogin: (email: string, password: string) => Promise<void>
+    handleLogout: () => Promise<void>
 }
 
 type AuthContextProviderProps = {

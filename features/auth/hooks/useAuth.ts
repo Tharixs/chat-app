@@ -1,19 +1,18 @@
-import { login } from '@/services/authService'
+import { login, logout } from '@/services/authService'
 import {
-    getAllUsers,
     getUserById,
     updateDataUser,
     updateUserProfile,
     uploadImage,
 } from '@/services/userService'
 import auth from '@react-native-firebase/auth'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import storage from '@react-native-firebase/storage'
-import { useMMKVBoolean } from 'react-native-mmkv'
+import { useMMKVBoolean, useMMKVObject } from 'react-native-mmkv'
 
 export const useAuth = () => {
-    const [user, setUser] = useState<User | null>(null)
+    const [user, setUser] = useMMKVObject<User | null>('user')
     const [isAuthenticated, setIsAuthenticated] =
         useMMKVBoolean('isAuthenticated')
 
@@ -27,6 +26,17 @@ export const useAuth = () => {
             } else {
                 throw Error('No user found please contact support!')
             }
+        } catch (error) {
+            console.log(error)
+            throw Error((error as Error).message)
+        }
+    }
+
+    const handleLogout = async () => {
+        try {
+            await logout()
+            setIsAuthenticated(false)
+            setUser(null)
         } catch (error) {
             console.log(error)
             throw Error((error as Error).message)
@@ -50,21 +60,9 @@ export const useAuth = () => {
             }
         } catch (error) {
             console.log(error)
-            throw new Error('Error update user profile')
+            throw new Error((error as Error).message)
         }
     }
-
-    const fetchAllUsers = useCallback(async () => {
-        if (auth().currentUser) {
-            try {
-                return await getAllUsers(auth().currentUser?.uid!)
-            } catch (error) {
-                console.log('fetchAllUsers', error)
-                throw error
-            }
-        }
-        return []
-    }, [])
 
     const refetchUser = useCallback(async () => {
         const userData = auth().currentUser
@@ -77,7 +75,7 @@ export const useAuth = () => {
                 throw new Error('Error refetching user')
             }
         }
-    }, [])
+    }, [setUser])
 
     const handleGetUserById = useCallback(async (userId: string) => {
         try {
@@ -92,11 +90,10 @@ export const useAuth = () => {
     return {
         user,
         isAuthenticated,
-        setIsAuthenticated,
         handleLogin,
         handleUpdateUserProfile,
-        fetchAllUsers,
         refetchUser,
         handleGetUserById,
+        handleLogout,
     }
 }

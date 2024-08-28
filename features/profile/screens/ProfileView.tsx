@@ -12,9 +12,12 @@ import Button from '@/components/Button'
 import * as Updates from 'expo-updates'
 import LotieAnimationIcon from '@/components/LotieAnimationIcon'
 import { Control, FormState } from 'react-hook-form'
+import { Menu, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
+import MenuItem from '@/components/pop-up-menu/MenuItem'
+import { AntDesign, Feather } from '@expo/vector-icons'
 
 type ProfileViewTypeProps = {
-    pickImage: () => void
+    pickImage: (source: 'library' | 'camera') => Promise<void>
     image?: string
     control: Control<
         {
@@ -49,23 +52,68 @@ const ProfileView: React.FC<ProfileViewTypeProps> = ({
                 }}
                 className="gap-4"
             >
-                <TouchableOpacity className="items-center" onPress={pickImage}>
-                    <Image
-                        style={{
-                            height: hp(20),
-                            aspectRatio: 1,
-                            borderRadius: 100,
+                <Menu style={{ alignItems: 'center' }}>
+                    <MenuTrigger
+                        customStyles={{
+                            TriggerTouchableComponent: TouchableOpacity,
                         }}
-                        source={
-                            (image || user?.imageUrl) ??
-                            require('@/assets/images/avatar.png')
-                        }
-                        contentFit="cover"
-                        transition={800}
-                        placeholder={blurHash}
-                        children
-                    />
-                </TouchableOpacity>
+                    >
+                        <Image
+                            style={{
+                                height: hp(20),
+                                aspectRatio: 1,
+                                borderRadius: 100,
+                            }}
+                            source={
+                                (image || user?.imageUrl) ??
+                                require('@/assets/images/avatar.png')
+                            }
+                            contentFit="cover"
+                            transition={800}
+                            placeholder={blurHash}
+                        />
+                    </MenuTrigger>
+                    <MenuOptions
+                        customStyles={{
+                            optionsContainer: {
+                                borderRadius: 10,
+                                borderCurve: 'continuous',
+                                marginTop: 110,
+                                marginLeft: 75,
+                                backgroundColor: 'white',
+                                shadowOpacity: 0.2,
+                                shadowOffset: { height: 0, width: 0 },
+                                width: 160,
+                            },
+                        }}
+                    >
+                        <MenuItem
+                            onClick={() => pickImage('camera')}
+                            text="Camera"
+                            value={null}
+                            icon={
+                                <Feather
+                                    name="camera"
+                                    size={hp(2.5)}
+                                    color={'gray'}
+                                />
+                            }
+                        />
+                        <View className="border-b p-[1px] border-gray-300 mx-3" />
+                        <MenuItem
+                            onClick={() => pickImage('library')}
+                            text="Albums"
+                            value={null}
+                            icon={
+                                <AntDesign
+                                    name="folderopen"
+                                    size={hp(2.5)}
+                                    color={'gray'}
+                                />
+                            }
+                        />
+                    </MenuOptions>
+                </Menu>
                 <View style={{ marginTop: hp(4) }} className="gap-4">
                     <TextInput
                         control={control}

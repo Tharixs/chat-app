@@ -7,18 +7,18 @@ import { ChatMessageList } from '@/features/chat/components/ChatMessageList'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
 
 type ChatViewTypeProps = {
-    loading: boolean
+    loading?: boolean
     getAllMessages: () => void
     messages: FirebaseFirestoreTypes.DocumentData[]
     control: any
     onSubmit: any
 }
 const ChatView: React.FC<ChatViewTypeProps> = ({
-    loading,
     getAllMessages,
     messages,
     control,
     onSubmit,
+    loading = false,
 }) => {
     return (
         <KeyboardAvoidingView className="flex-1 bg-white px-4">
@@ -34,6 +34,7 @@ const ChatView: React.FC<ChatViewTypeProps> = ({
                     control={control}
                     name="message"
                     placeholder="Type your message "
+                    onSubmitEditing={onSubmit}
                     icon={
                         <TouchableOpacity onPress={onSubmit}>
                             <Feather

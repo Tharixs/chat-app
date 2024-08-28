@@ -3,12 +3,12 @@ import { useAuthContext } from '@/context/authContext'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import * as Updates from 'expo-updates'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { userUpdateProfileSchema } from '@/schemas/user/userUpdateProfile.schema'
 import { router } from 'expo-router'
 import { useImagePicker } from '@/hooks/useImagePicker'
 import { useUpdateApp } from '@/hooks/useUpdateApp.hook'
 import { useModalActionContext } from '@/context/modalContext'
 import ProfileView from './ProfileView'
+import { userUpdateProfileSchema } from '../schemas/userUpdateProfile.schema'
 
 const Profile = () => {
     const { user, handleUpdateUserProfile, refetchUser } = useAuthContext()

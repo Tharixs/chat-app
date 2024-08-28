@@ -5,7 +5,6 @@ import React, { useEffect } from 'react'
 import * as Notifications from 'expo-notifications'
 
 import '../global.css'
-import { RoomChatProvider } from '@/context/roomChatContext'
 import { NotificationProvider } from '@/context/notificationContext'
 import {
     ModalContextProvider,
@@ -59,13 +58,11 @@ export default function RootLayout() {
     return (
         <MenuProvider>
             <AuthContextProvider>
-                <RoomChatProvider>
-                    <NotificationProvider>
-                        <ModalContextProvider>
-                            <MainLayout />
-                        </ModalContextProvider>
-                    </NotificationProvider>
-                </RoomChatProvider>
+                <NotificationProvider>
+                    <ModalContextProvider>
+                        <MainLayout />
+                    </ModalContextProvider>
+                </NotificationProvider>
             </AuthContextProvider>
         </MenuProvider>
     )

@@ -3,9 +3,9 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { register } from '@/services/authService'
 import { useModalActionContext } from '@/context/modalContext'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { signUpSchema } from '@/schemas/auth/signUp.schema'
 import { router } from 'expo-router'
 import RegisterView from './RegisterView'
+import { signUpSchema } from '../../schemas/signUp.schema'
 
 const Register = () => {
     const { openModal } = useModalActionContext()
