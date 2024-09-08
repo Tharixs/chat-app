@@ -1,18 +1,19 @@
 import { View, FlatList, Text, RefreshControl } from 'react-native'
 import React from 'react'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
-import SearchUserItem from './SearchUserItem'
+import SearchUserItem from './SearchUserItem/SearchUserItem'
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
-const SearchUserList = ({
-    users,
-    refetch,
-    loading,
-}: {
+type SearchUserListTypeProps = {
     users: FirebaseFirestoreTypes.DocumentData[]
     refetch: () => void
     loading: boolean
+}
+const SearchUserList: React.FC<SearchUserListTypeProps> = ({
+    users,
+    refetch,
+    loading,
 }) => {
-    console.log('users', users)
     return (
         <View className="flex-1">
             <FlatList
@@ -35,8 +36,11 @@ const SearchUserList = ({
                     />
                 )}
                 ListEmptyComponent={() => (
-                    <View className="flex-1 items-center justify-center">
-                        <Text className="text-lg font-bold">
+                    <View className="flex-1">
+                        <Text
+                            style={{ fontSize: hp(1.8) }}
+                            className="text-lg font-bold text-neutral-500 text-center"
+                        >
                             {loading ? 'Loading...' : 'No users found'}
                         </Text>
                     </View>

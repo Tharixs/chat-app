@@ -5,6 +5,8 @@ interface User {
     id: string
     imageUrl: string
     userName: string
+    followings?: User[]
+    followers?: User[]
 }
 
 interface CreatedAt {

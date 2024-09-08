@@ -87,3 +87,64 @@ export const uploadImage = async (
         throw new Error((error as Error).message)
     }
 }
+
+export const manageFollowUser = async (
+    userId: string,
+    friendId: string,
+    state: 'follow' | 'unfollow'
+) => {
+    try {
+        const user = (await getUserById(userId)) as User
+        const friend = (await getUserById(friendId)) as User
+        if (!user || !friend) {
+            throw new Error('User or Friend not found')
+        }
+
+        if (state === 'follow') {
+            // Follow user logic
+            await firestore()
+                .collection('users')
+                .doc(userId)
+                .update({
+                    followings: firestore.FieldValue.arrayUnion({
+                        id: friendId,
+                        userName: friend.userName ?? '',
+                    }),
+                })
+
+            await firestore()
+                .collection('users')
+                .doc(friendId)
+                .update({
+                    followers: firestore.FieldValue.arrayUnion({
+                        id: userId,
+                        userName: user.userName ?? '',
+                    }),
+                })
+        } else {
+            // Unfollow user logic
+            await firestore()
+                .collection('users')
+                .doc(userId)
+                .update({
+                    followings: firestore.FieldValue.arrayRemove({
+                        id: friendId,
+                        userName: friend.userName ?? '',
+                    }),
+                })
+
+            await firestore()
+                .collection('users')
+                .doc(friendId)
+                .update({
+                    followers: firestore.FieldValue.arrayRemove({
+                        id: userId,
+                        userName: user.userName ?? '',
+                    }),
+                })
+        }
+    } catch (error) {
+        console.error('error add friend', error)
+        throw new Error((error as Error).message)
+    }
+}
