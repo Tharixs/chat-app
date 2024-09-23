@@ -30,11 +30,11 @@ const MainLayout = () => {
 
     useEffect(() => {
         const inApp = segments[0] === '(app)'
-        if (segments[0] === undefined) router.replace('signIn')
+        if (!segments[0]) router.replace('(auth)/login')
         if (isAuthenticated && !inApp) {
             router.replace('home')
         } else if (!isAuthenticated && inApp) {
-            router.replace('signIn')
+            router.replace('(auth)/login')
         }
     }, [isAuthenticated, segments])
 

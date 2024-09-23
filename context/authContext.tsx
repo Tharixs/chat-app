@@ -2,7 +2,7 @@ import React, { ReactNode, createContext, useContext } from 'react'
 
 import ImagePicker from 'expo-image-picker'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
-import { useAuth } from '@/features/auth/hooks/useAuth'
+import { useAuth } from '@/app/(auth)/hooks/useAuth'
 
 type AuthContextHooksProps = {
     user?: User | null

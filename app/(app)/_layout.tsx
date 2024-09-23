@@ -1,10 +1,10 @@
-import ChatHeader from '@/features/chat/components/ChatHeader'
-import HomeHeader from '@/features/home/components/HomeHeader'
+import ChatHeader from '@/app/(app)/chat/components/ChatHeader'
 import { Feather } from '@expo/vector-icons'
 import { router, Stack } from 'expo-router'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
+import HomeHeader from './home/components/HomeHeader'
 
 export default function _layout() {
     const DefaultHeaderScreen = ({ label }: { label: string }) => {

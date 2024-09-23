@@ -109,6 +109,7 @@ export const manageFollowUser = async (
                     followings: firestore.FieldValue.arrayUnion({
                         id: friendId,
                         userName: friend.userName ?? '',
+                        imageUrl: friend.imageUrl ?? '',
                     }),
                 })
 
@@ -119,6 +120,7 @@ export const manageFollowUser = async (
                     followers: firestore.FieldValue.arrayUnion({
                         id: userId,
                         userName: user.userName ?? '',
+                        imageUrl: user.imageUrl ?? '',
                     }),
                 })
         } else {
@@ -130,6 +132,7 @@ export const manageFollowUser = async (
                     followings: firestore.FieldValue.arrayRemove({
                         id: friendId,
                         userName: friend.userName ?? '',
+                        imageUrl: friend.imageUrl ?? '',
                     }),
                 })
 
@@ -140,6 +143,7 @@ export const manageFollowUser = async (
                     followers: firestore.FieldValue.arrayRemove({
                         id: userId,
                         userName: user.userName ?? '',
+                        imageUrl: user.imageUrl ?? '',
                     }),
                 })
         }
