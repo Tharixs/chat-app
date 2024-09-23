@@ -3,7 +3,7 @@ import React from 'react'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import TextInput from '@/components/TextInput'
 import { Feather } from '@expo/vector-icons'
-import { ChatMessageList } from '@/app/(app)/chat/components/ChatMessageList'
+import { ChatMessageList } from '@/app/(home)/chat/components/ChatMessageList'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
 
 type ChatViewTypeProps = {

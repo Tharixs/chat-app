@@ -12,7 +12,7 @@ export default function ChatList({
     refetch,
     loading,
 }: {
-    users: User['followings']
+    users: User[] | undefined
     refetch: () => void
     loading: boolean
 }) {

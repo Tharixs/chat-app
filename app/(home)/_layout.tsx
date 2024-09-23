@@ -1,12 +1,12 @@
-import ChatHeader from '@/app/(app)/chat/components/ChatHeader'
 import { Feather } from '@expo/vector-icons'
 import { router, Stack } from 'expo-router'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
-import HomeHeader from './home/components/HomeHeader'
+import HomeHeader from './components/HomeHeader'
+import ChatHeader from './chat/components/ChatHeader'
 
-export default function _layout() {
+export default function Homelayout() {
     const DefaultHeaderScreen = ({ label }: { label: string }) => {
         return (
             <TouchableOpacity
@@ -27,7 +27,7 @@ export default function _layout() {
     return (
         <Stack>
             <Stack.Screen
-                name="home"
+                name="index"
                 options={{ header: () => <HomeHeader /> }}
             />
             <Stack.Screen

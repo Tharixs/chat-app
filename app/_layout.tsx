@@ -29,10 +29,10 @@ const MainLayout = () => {
     const { closeModal } = useModalActionContext()
 
     useEffect(() => {
-        const inApp = segments[0] === '(app)'
+        const inApp = segments[0] === '(home)'
         if (!segments[0]) router.replace('(auth)/login')
         if (isAuthenticated && !inApp) {
-            router.replace('home')
+            router.replace('(home)')
         } else if (!isAuthenticated && inApp) {
             router.replace('(auth)/login')
         }
