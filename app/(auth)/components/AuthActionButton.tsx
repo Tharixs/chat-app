@@ -8,31 +8,26 @@ type AuthActionButtonTypeProps = {
     formState: any
     reset?: any
     onSubmit: () => void
+    label: string
 }
 const AuthActionButton: React.FC<
     PropsWithChildren<AuthActionButtonTypeProps>
-> = ({ formState, children, onSubmit }) => {
-    return (
-        <View className="gap-4">
-            <View>
-                {formState.isSubmitting ? (
-                    <View className="justify-center items-center">
-                        <LotieAnimationIcon
-                            source={require('@/assets/images/loading.json')}
-                            size={hp(15.5)}
-                        />
-                    </View>
-                ) : (
-                    <Button
-                        mode="contained"
-                        label="Sign Up"
-                        onPress={onSubmit}
+> = ({ formState, children, onSubmit, label }) => (
+    <View className="gap-4">
+        <View>
+            {formState.isSubmitting ? (
+                <View className="justify-center items-center">
+                    <LotieAnimationIcon
+                        source={require('@/assets/images/loading.json')}
+                        size={hp(15.5)}
                     />
-                )}
-            </View>
-            {children}
+                </View>
+            ) : (
+                <Button mode="contained" label={label} onPress={onSubmit} />
+            )}
         </View>
-    )
-}
+        {children}
+    </View>
+)
 
 export default AuthActionButton

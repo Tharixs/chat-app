@@ -11,7 +11,7 @@ import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
 
 const Chat = () => {
     const { user } = useAuthContext()
-    const item = JSON.parse(useGlobalSearchParams()?.item as string)
+    const { idReceiver } = useGlobalSearchParams()
     const { control, handleSubmit, getValues, reset, formState } = useForm()
     const { openModal } = useModalActionContext()
     const ref = useRef<FlatList<any>>(null)
@@ -20,22 +20,30 @@ const Chat = () => {
     >([])
 
     useEffect(() => {
-        if (!user || !item) return
-        const unsubscribe = getAllMessages(user?.id, item?.id, setMessages)
+        if (!user || !idReceiver) return
+        const unsubscribe = getAllMessages(
+            user?.id,
+            String(idReceiver),
+            setMessages
+        )
         return unsubscribe
-    }, [item, user])
+    }, [idReceiver, user])
 
     const handleSendMessage: SubmitHandler<{ message: string }> = throttle(
         async (data: { message: string }) => {
             try {
-                if (!user || !item) {
+                if (!user || !idReceiver) {
                     openModal({
                         typeModal: 'fail',
                         body: 'Please login first',
                         title: 'Error',
                     })
                 } else {
-                    await sendMessage(user?.id, item?.id, data.message)
+                    await sendMessage(
+                        user?.id,
+                        String(idReceiver),
+                        data.message
+                    )
                     reset()
                 }
             } catch (error) {
@@ -58,7 +66,8 @@ const Chat = () => {
             control={control}
             loading={formState.isSubmitting}
             getAllMessages={() =>
-                user && getAllMessages(user?.id, item?.id, setMessages)
+                user &&
+                getAllMessages(user?.id, String(idReceiver), setMessages)
             }
             messages={messages}
             onSubmit={() =>

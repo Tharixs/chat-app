@@ -20,10 +20,8 @@ Chat App Features
   - User
     - update profile user                 ( ✅️ )
     - update with image                   ( ✅️ )
-    - add friends                         ( ✅️ )
-    - remove friends                      ( ✅️ )
   - Notifications
-    - receive notifications               ( ✅️ )
+    - receive notifications               ( ❌️ )
     - send notifications to spesific user ( ❌️ )
   - OTA ( Over-the-air update )           ( ✅️ ) 
  

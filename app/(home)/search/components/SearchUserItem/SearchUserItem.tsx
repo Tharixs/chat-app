@@ -22,10 +22,9 @@ const SearchUserItem = ({
     const handleChatPress = throttle(() => {
         router.push({
             pathname: '/chat',
-            params: { item: JSON.stringify(item ?? '{}') as any },
+            params: { idReceiver: String(item?.id!) },
         })
     }, 1000)
-
     const handleFollowAction = throttle(
         async (state: 'follow' | 'unfollow') => {
             try {

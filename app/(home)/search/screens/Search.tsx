@@ -1,9 +1,7 @@
-import { Platform } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useForm } from 'react-hook-form'
 import useDebounce from '@/hooks/useDebounce'
-import { getAllUsers } from '@/services/userService'
+import { getAllUsersByName } from '@/services/userService'
 import { useModalActionContext } from '@/context/modalContext'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
 import SearchView from './SearchView'
@@ -18,7 +16,7 @@ const Search = () => {
     const fetchAllUsersWithSearchParams = useCallback(async () => {
         try {
             if (!searchDebounce) return
-            const users = await getAllUsers(undefined, searchDebounce)
+            const users = await getAllUsersByName(searchDebounce)
             if (!users) return
             setUsers(users)
         } catch (error) {

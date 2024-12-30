@@ -49,7 +49,11 @@ const RegisterView: React.FC<RegisterViewTypeProps> = ({
                 </View>
                 {/* Text Input */}
                 <AuthRegisterForm formState={formState} control={control} />
-                <AuthActionButton formState={formState} onSubmit={onSubmit}>
+                <AuthActionButton
+                    formState={formState}
+                    onSubmit={onSubmit}
+                    label="Sign Up"
+                >
                     <View className=" flex-row justify-center">
                         <Text
                             style={{ fontSize: hp(1.8) }}
@@ -57,7 +61,7 @@ const RegisterView: React.FC<RegisterViewTypeProps> = ({
                         >
                             Already have an account?{' '}
                         </Text>
-                        <Pressable onPress={() => router.push('/login')}>
+                        <Pressable onPress={() => router.push('(auth)/login')}>
                             <Text
                                 style={{ fontSize: hp(1.8) }}
                                 className="font-semibold text-rose-500"

@@ -138,7 +138,7 @@ const ProfileView: React.FC<ProfileViewTypeProps> = ({
                     <View className="justify-center items-center">
                         <LotieAnimationIcon
                             size={hp(15.5)}
-                            source={require('../../../../assets/images/loading.json')}
+                            source={require('@/assets/images/loading.json')}
                         />
                     </View>
                 ) : (

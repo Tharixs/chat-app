@@ -21,7 +21,7 @@ const Register = () => {
                 title: 'Register Success !',
                 body: 'You have successfully registered your account, please login',
             })
-            router.push('/signIn')
+            router.push('(auth)/login')
             reset()
         } catch (err) {
             openModal({

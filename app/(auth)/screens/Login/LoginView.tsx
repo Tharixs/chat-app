@@ -49,7 +49,11 @@ const LoginView: React.FC<LoginViewTypeProps> = ({
                     </Text>
                 </View>
                 <AuthLoginForm control={control} formState={formState} />
-                <AuthActionButton formState={formState} onSubmit={onSubmit}>
+                <AuthActionButton
+                    formState={formState}
+                    onSubmit={onSubmit}
+                    label="Sign In"
+                >
                     <View className=" flex-row justify-center">
                         <Text
                             style={{ fontSize: hp(1.8) }}

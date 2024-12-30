@@ -27,3 +27,10 @@ export const timeFormater = (date: string | Date) => {
     const minutes = newDate.getMinutes()
     return `${hours}:${minutes}`
 }
+
+export const timeFormaterMillis = (durationMillis = 0) => {
+    const totalSeconds = Math.floor(durationMillis / 1000)
+    const minutes = Math.floor(totalSeconds / 60)
+    const seconds = totalSeconds % 60
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
+}

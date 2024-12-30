@@ -2,7 +2,7 @@ import firestore from '@react-native-firebase/firestore'
 export const storeFCMToken = async (token: string, userId: string) => {
     try {
         if (token.includes('Error:')) return
-        await firestore().collection('FcmTokens').doc(userId).set({
+        await firestore().collection('fcmTokens').doc(userId).set({
             userId: userId,
             fcmToken: token,
             createdAt: firestore.FieldValue.serverTimestamp(),
@@ -17,7 +17,7 @@ export const storeFCMToken = async (token: string, userId: string) => {
 export const getFCMTokenByUserId = async (userId: string) => {
     try {
         const querySnapshot = await firestore()
-            .collection('FcmTokens')
+            .collection('fcmTokens')
             .where('userId', '==', userId)
             .where('revoked', '==', false)
             .limit(1)
@@ -32,7 +32,7 @@ export const getFCMTokenByUserId = async (userId: string) => {
 
 export const updateFCMToken = async (data: Partial<FcmToken>) => {
     try {
-        await firestore().collection('FcmTokens').doc(data.userId).update(data)
+        await firestore().collection('fcmTokens').doc(data.userId).update(data)
     } catch (error) {
         console.error('error update fcm token', error)
         throw Error(error as string)

@@ -29,7 +29,7 @@ const Profile = () => {
                 title: 'Update Success !',
                 body: 'You have successfully updated your profile',
             })
-            router.replace('home')
+            router.replace('(home)')
         } catch (error) {
             console.error('error update user profile', error)
             openModal({

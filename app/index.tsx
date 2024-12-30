@@ -8,7 +8,7 @@ export default function StartPage() {
         <View className="flex-1 items-center justify-center">
             <LotieAnimationIcon
                 size={hp(15)}
-                source={require('../assets/images/loading.json')}
+                source={require('@/assets/images/loading.json')}
             />
         </View>
     )

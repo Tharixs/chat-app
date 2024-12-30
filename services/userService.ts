@@ -30,24 +30,15 @@ export const updateUserProfile = async (data: Partial<User>) => {
     }
 }
 
-export const getAllUsers = async (userId?: string, searchByName?: string) => {
+export const getAllUsersByName = async (searchByName?: string) => {
     try {
-        if (userId && !searchByName) {
-            const querySnapshot = await firestore()
-                .collection('users')
-                .where('id', '!=', userId)
-                .get()
-            const users = querySnapshot.docs.map((doc) => doc.data())
-            return users
-        } else {
-            const querySnapshot = await firestore()
-                .collection('users')
-                .where('userName', '>=', searchByName)
-                .where('userName', '<=', searchByName + '\uf8ff')
-                .get()
-            const users = querySnapshot.docs.map((doc) => doc.data())
-            return users
-        }
+        const querySnapshot = await firestore()
+            .collection('users')
+            .where('userName', '>=', searchByName)
+            .where('userName', '<=', searchByName + '\uf8ff')
+            .get()
+        const users = querySnapshot.docs.map((doc) => doc.data())
+        return users
     } catch (error) {
         console.error('error fetch users', error)
         throw new Error((error as Error).message)

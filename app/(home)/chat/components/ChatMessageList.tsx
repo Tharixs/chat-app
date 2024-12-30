@@ -33,7 +33,7 @@ export const ChatMessageList: React.FC<{
                 <View className="flex-1 justify-center align-center items-center rotate-180">
                     {props.loading ? (
                         <LotieAnimationIcon
-                            source={require('../../../../assets/images/loading.json')}
+                            source={require('@/assets/images/loading.json')}
                             size={hp(40)}
                         />
                     ) : (

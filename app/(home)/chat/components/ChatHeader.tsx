@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { router, useGlobalSearchParams } from 'expo-router'
 import { Feather } from '@expo/vector-icons'
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
@@ -10,20 +10,16 @@ import ImageModal from 'react-native-image-modal'
 import { useAuth } from '@/app/(auth)/hooks/useAuth'
 
 export default function ChatHeader() {
-    const { item } = useGlobalSearchParams()
+    const { idReceiver } = useGlobalSearchParams()
     const { handleGetUserById } = useAuth()
     const [userData, setUserData] =
         useState<FirebaseFirestoreTypes.DocumentData>()
-    const userId = useMemo(
-        () => item && (JSON.parse(item as string).id as string),
-        [item]
-    ) // GET USER RECEIVER
 
     useEffect(() => {
-        if (userId) {
+        if (idReceiver) {
             const fetchUserById = async () => {
                 try {
-                    const user = await handleGetUserById(userId)
+                    const user = await handleGetUserById(String(idReceiver))
                     setUserData(user)
                 } catch (error) {
                     console.error('Error User', error)
@@ -32,7 +28,7 @@ export default function ChatHeader() {
 
             fetchUserById()
         }
-    }, [handleGetUserById, userId])
+    }, [handleGetUserById, idReceiver])
 
     return (
         <View className="flex-row items-center gap-4">
